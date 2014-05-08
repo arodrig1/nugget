@@ -40,18 +40,14 @@
     fb_nugget_id = Math.random().toString(36).substring(7);
 
     // set up variables to access firebase data structure
-    /*fb_new_chat_room = fb_instance.child('chatrooms').child(fb_chat_room_id);
-    fb_instance_users = fb_new_chat_room.child('users');
-    fb_instance_stream = fb_new_chat_room.child('stream');
-    */
+    fb_new_nugget = fb_instance.child('nuggets').child(fb_nugget_id);
+    fb_instance_stream = fb_new_nugget.child('stream');
 
     // listen to events
-    /*fb_instance_users.on("child_added",function(snapshot){
-      display_msg({m:snapshot.val().name+" joined the room",c: snapshot.val().c});
+    fb_instance_stream.on("child_added", function(snapshot) {
+      //display_msg(snapshot.val());
+      console.log("Video added to firebase stream!");
     });
-    fb_instance_stream.on("child_added",function(snapshot){
-      display_msg(snapshot.val());
-    });*/
 
     // block until username is answered
     username = window.prompt("Welcome! Please enter your name, as you would like your recipients to see it:");
@@ -61,35 +57,20 @@
 
     $("#waiting").remove();
 
-    // bind submission box
     $("button.start").click(function(event) {
-      /*if (event.which == 13) {
-        fb_instance_stream.push({m:username+": " +$(this).val(), c: my_color});
-        $(this).val("");
-        scroll_to_bottom(0);
-      // Ctrl + '\' combo
-      } else if (event.ctrlKey && event.which == REC_KEY) {
-        event.preventDefault();
-        $(this).val($(this).val() + "\\");
-      // '\'' key
-      } else if (event.which == REC_KEY) {
-        event.preventDefault();
-        //var startVal = $("#progressbar").progressbar("value");
-        var recVal = $("#recordbar").progressbar("value");
-        //if (startVal < BAR_MAX) $("#progressbar").progressbar("value", startVal + BAR_START_STEP);
-        if (recVal == 0) mediaRecorder.start(VID_MAX);
-        if (recVal < BAR_MAX) $("#recordbar").progressbar("value", recVal + BAR_RECORD_STEP);
-      }*/
-      $("button.start").prop("disabled", true);
+      $(this).prop("disabled", true);
       $("button.stop").prop("disabled", false);
       mediaRecorder.start(VID_MAX);
     });
 
     $("button.stop").click(function(event) {
-      $("button.stop").prop("disabled", true);
-      $("button.send").prop("disabled", false);
+      $(this).prop("disabled", true);
       $("#recordbar").progressbar("value", BAR_MIN);
       mediaRecorder.stop();
+    });
+
+    $("button.send").click(function(event) {
+      window.alert("Nugget ID: " + fb_nugget_id);
     });
   }
 
@@ -135,8 +116,8 @@
     // callback for when we get video stream from user.
     var onMediaSuccess = function(stream) {
       // create video element, attach webcam stream to video element
-      var video_width= 160;
-      var video_height= 120;
+      var video_width= 640;
+      var video_height= 480;
       var webcam_stream = document.getElementById('webcam_stream');
       var video = document.createElement('video');
       webcam_stream.innerHTML = "";
@@ -166,9 +147,10 @@
           // convert data into base 64 blocks
           blob_to_base64(blob, function(b64_data){
             cur_video_blob = b64_data;
-            fb_instance_stream.push({ m: username + ": " + $("#submission input").val(), v: cur_video_blob, c: my_color});
-            $("#submission input").val("");
+            fb_instance_stream.push({ f: username, m: $("#submission input").val(), v: cur_video_blob });
           });
+
+          $("button.send").prop("disabled", false);
       };
 
       console.log("Connected to media stream!");
@@ -182,18 +164,6 @@
     // get video stream from user. see https://github.com/streamproc/MediaStreamRecorder
     navigator.getUserMedia(mediaConstraints, onMediaSuccess, onMediaError);
   }
-
-  // check to see if a message qualifies to be replaced with video.
-  var has_emotions = function(msg){
-    var options = ["lol",":)",":("];
-    for(var i=0;i<options.length;i++){
-      if(msg.indexOf(options[i])!= -1){
-        return true;
-      }
-    }
-    return false;
-  }
-
 
   // some handy methods for converting blob to base 64 and vice versa
   // for performance bench mark, please refer to http://jsperf.com/blob-base64-conversion/5
