@@ -70,7 +70,7 @@
     });
 
     $("button.send").click(function(event) {
-
+      window.alert("Nugget ID: " + fb_nugget_id);
     });
   }
 
