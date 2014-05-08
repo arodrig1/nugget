@@ -4,11 +4,11 @@ var _create = function(req, res) {
   res.render('nuggets/create');
 }
 
-var _view = function(req, res) {
-  res.render('nuggets/view', { 'id': req.id });
+var _show = function(req, res) {
+  res.render('nuggets/show', { 'id': req.id });
 }
 
-var _submit = function(req, res) {
+var _save = function(req, res) {
   /*Timing.create("Ride request", req.body.testSet, req.body.elapsed, function(){});
   var newRide = {
     driverUsername: "bayian",//CHANGE ME!
@@ -24,11 +24,11 @@ var _submit = function(req, res) {
   };
   User.saveRide(req.user, newRide, function(){});*/
   req.flash('info', "Nugget created!");
-  //res.redirect('rider/home');
+  res.redirect('/');
 }
 
 module.exports = {
     create: _create,
-    view: _view,
-    submit: _submit
+    show: _show,
+    save: _save
 }

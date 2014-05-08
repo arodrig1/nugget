@@ -41,9 +41,10 @@ app.use(passport.session());
 
 require('./config/passport')(passport);
 
-app.get('/', index.show);
-app.get('/nuggets/create', nuggets.create);
-app.get('/nuggets/show/:id', nuggets.view);
+app.get('/', index.view);
+app.get('/nuggets/new', nuggets.create);
+app.post('/nuggets', nuggets.save);
+app.get('/nuggets/:id', nuggets.show);
 
 app.get('/login', authentication.login);
 app.post('/login',
