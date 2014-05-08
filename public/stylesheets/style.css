@@ -21,13 +21,18 @@ p {
 
 }
 
-.btn {
+button {
 	font-family: Garamond;
 	line-height: 1em;
 	color: white;
 	background-color: #52CC29;
 	font-size: 25px;
 }
+
+button:disabled {
+	background-color: gray;
+}
+
 #start{
 	
 }

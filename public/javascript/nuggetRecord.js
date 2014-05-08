@@ -29,6 +29,7 @@
       }
     });
     $("#stop").prop("disabled", true);
+    $("#addpics").prop("disabled", true);
     $("#send").prop("disabled", true);
   });
 
@@ -65,6 +66,7 @@
 
     $("#stop").click(function(event) {
       $(this).prop("disabled", true);
+      $("#addpics").prop("disabled", false);
       $("#recordbar").progressbar("value", BAR_MIN);
       mediaRecorder.stop();
     });
