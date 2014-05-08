@@ -14,6 +14,10 @@
     "debug": "~0.7.4",
     "jade": "~1.3.0",
     "mongodb": "*",
-    "mongoose": "*"
+    "mongoose": "*",
+    "connect-flash": "*",
+    "passport": "*",
+    "express3-handlebars": "*",
+    "express-partials": "*"
   }
 }
