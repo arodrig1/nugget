@@ -110,7 +110,7 @@
     // we're only recording video, not audio
     var mediaConstraints = {
       video: true,
-      audio: true
+      audio: false
     };
 
     // callback for when we get video stream from user.
