@@ -28,8 +28,8 @@
         $(this).progressbar("value", BAR_MIN);
       }
     });
-    $("button.stop").prop("disabled", true);
-    $("button.send").prop("disabled", true);
+    $("#stop").prop("disabled", true);
+    $("#send").prop("disabled", true);
   });
 
   function connect_to_chat_firebase(){
@@ -57,20 +57,20 @@
 
     $("#waiting").remove();
 
-    $("button.start").click(function(event) {
+    $("#start").click(function(event) {
       $(this).prop("disabled", true);
-      $("button.stop").prop("disabled", false);
+      $("#stop").prop("disabled", false);
       mediaRecorder.start(VID_MAX);
     });
 
-    $("button.stop").click(function(event) {
+    $("#stop").click(function(event) {
       $(this).prop("disabled", true);
       $("#recordbar").progressbar("value", BAR_MIN);
       mediaRecorder.stop();
     });
 
-    $("button.send").click(function(event) {
-      window.alert("Nugget ID: " + fb_nugget_id);
+    $("#send").click(function(event) {
+      alert("Nugget ID: " + fb_nugget_id);
     });
   }
 
@@ -147,10 +147,11 @@
           // convert data into base 64 blocks
           blob_to_base64(blob, function(b64_data){
             cur_video_blob = b64_data;
-            fb_instance_stream.push({ f: username, m: $("#submission input").val(), v: cur_video_blob });
+            //fb_instance_stream.push({ f: username, m: $("#submission input").val(), v: cur_video_blob });
+            fb_instance_stream.push({ f: username, v: cur_video_blob });
           });
 
-          $("button.send").prop("disabled", false);
+          $("#send").prop("disabled", false);
       };
 
       console.log("Connected to media stream!");
