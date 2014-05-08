@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-var _view = function(req, res) {
+var _show = function(req, res) {
   res.render('index', { title: 'Express' });
 }
 
@@ -14,7 +14,7 @@ var _help = function(req, res) {
 }
 
 module.exports = {
-	view: _view,
+	show: _show,
 	about: _about,
 	help: _help
 }
