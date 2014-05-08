@@ -1,0 +1,21 @@
+extends layout
+
+block content
+  h1 NUGGET 
+
+  div.description
+  p. Tell your parents the highlights of your day in less than 2 min!
+  p. REMEMBER...they LOVE to see your BEAUTIFUL face! 
+
+  div#waiting
+  div#recordbar
+  div#webcam_stream
+  div#video_container
+
+  button(class="btn", id="start", data-action="bea").
+    Start
+  button(class="btn", id="stop", data-action="bea").
+    Stop
+  button(class="btn", id="send", data-action="bea").
+    Send
+
