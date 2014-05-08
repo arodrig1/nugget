@@ -1,4 +1,17 @@
 extends layout
 
 block content
-  h1 Receiving video...
+  h1 NUGGET Recepient
+
+  div.description
+  p. Look at the NUGGET your child has sent!! 
+
+  div#webcam_stream
+  div#video_container
+
+  button(class="btn", id="play", data-action="bea").
+    Play
+
+
+  script(src='/javascript/nuggetPlayback.js')
+
