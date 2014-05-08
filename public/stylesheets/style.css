@@ -6,3 +6,28 @@ body {
 a {
   color: #00B7FF;
 }
+
+h1 {
+	font-family: Garamond, serif;
+	line-height: 1em;
+	color: black;
+	t
+}
+
+p {
+	font-family: Garamond;
+	line-height: 1em;
+	color:black;
+
+}
+
+.btn {
+	font-family: Garamond;
+	line-height: 1em;
+	color: white;
+	background-color: #52CC29;
+	font-size: 25px;
+}
+#start{
+	
+}
