@@ -11,92 +11,49 @@
   var fb_instance;
   var username = null;
   var fb_chat_room_id = null;
-  //var fb_new_chat_room;
-  //var fb_instance_users;
-  //var fb_instance_stream;
-  //var my_color;
   var mediaRecorder;
 
   $(document).ready(function(){
     connect_to_chat_firebase();
-    connect_webcam();
-    $("#recordbar").progressbar({ 
-      value: BAR_MIN,
-      max: BAR_MAX,
-      complete: function(event, ui) {
-        mediaRecorder.stop();
-        $(this).progressbar("value", BAR_MIN);
-      }
-    });
-    $("#stop").prop("disabled", true);
-    $("#send").prop("disabled", true);
   });
 
   function connect_to_chat_firebase(){
-    /* Include your Firebase link here!*/
-    fb_instance = new Firebase("https://resplendent-fire-793.firebaseio.com");
 
-    // generate new nugget id
-    fb_nugget_id = Math.random().toString(36).substring(7);
+    var address = document.URL.split("/");
+    fb_nugget_id = address[address.length - 1];
 
-    // set up variables to access firebase data structure
-    fb_new_nugget = fb_instance.child('nuggets').child(fb_nugget_id);
-    fb_instance_stream = fb_new_nugget.child('stream');
+    fb_instance = new Firebase("https://resplendent-fire-793.firebaseio.com/nuggets/" + fb_nugget_id + "/stream/");
 
-    // listen to events
-    fb_instance_stream.on("child_added", function(snapshot) {
-      //display_msg(snapshot.val());
-      console.log("Video added to firebase stream!");
-    });
-
-    // block until username is answered
-    username = window.prompt("Welcome! Please enter your name, as you would like your recipients to see it:");
-    if(!username){
-      username = "anonymous" + Math.floor(Math.random()*1111);
-    }
-
-    $("#waiting").remove();
-
-    $("#start").click(function(event) {
-      $(this).prop("disabled", true);
-      $("#stop").prop("disabled", false);
-      mediaRecorder.start(VID_MAX);
-    });
-
-    $("#stop").click(function(event) {
-      $(this).prop("disabled", true);
-      $("#recordbar").progressbar("value", BAR_MIN);
-      mediaRecorder.stop();
-    });
-
-    $("#send").click(function(event) {
-      alert("Send this link to MOMMY!: " + window.location.origin + "/nuggets/" + fb_nugget_id);
+    fb_instance.on('value', function(snapshot) {
+      if(snapshot.val() === null) {
+        alert('Nugget not found!');
+      } else {
+        display_vid(snapshot.val());
+      }
     });
   }
 
-  // creates a message node and appends it to the conversation
-  function display_msg(data){
-    $("#conversation").append("<div class='msg' style='color:"+data.c+"'>"+data.m+"</div>");
-    if(data.v){
-      // for video element
-      var video = document.createElement("video");
-      video.autoplay = true;
-      video.controls = false; // optional
-      video.loop = true;
-      video.width = 120;
+  function display_vid(data) {    
+    data = data[Object.keys(data)[0]];
 
-      var source = document.createElement("source");
-      source.src =  URL.createObjectURL(base64_to_blob(data.v));
-      source.type =  "video/webm";
+    var video = document.createElement("video");
+    video.autoplay = false;
+    video.controls = true; // optional
+    video.loop = false;
+    video.width = 640;
+    video.height = 480;
 
-      video.appendChild(source);
+    var source = document.createElement("source");
+    source.src =  URL.createObjectURL(base64_to_blob(data.v));
+    source.type =  "video/webm";
 
-      // for gif instead, use this code below and change mediaRecorder.mimeType in onMediaSuccess below
-      // var video = document.createElement("img");
-      // video.src = URL.createObjectURL(base64_to_blob(data.v));
+    video.appendChild(source);
 
-      document.getElementById("conversation").appendChild(video);
-    }
+    // for gif instead, use this code below and change mediaRecorder.mimeType in onMediaSuccess below
+    // var video = document.createElement("img");
+    // video.src = URL.createObjectURL(base64_to_blob(data.v));
+
+    document.getElementById("webcam_stream").appendChild(video);
   }
 
   function scroll_to_bottom(wait_time){
@@ -110,7 +67,7 @@
     // we're only recording video, not audio
     var mediaConstraints = {
       video: true,
-      audio: true
+      audio: false
     };
 
     // callback for when we get video stream from user.
