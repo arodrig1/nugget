@@ -70,7 +70,7 @@
     });
 
     $("#send").click(function(event) {
-      alert("Nugget ID: " + fb_nugget_id);
+      alert("Send this link to MOMMY!: " + window.location.origin + "/nuggets/" + fb_nugget_id);
     });
   }
 
@@ -110,7 +110,7 @@
     // we're only recording video, not audio
     var mediaConstraints = {
       video: true,
-      audio: false
+      audio: true
     };
 
     // callback for when we get video stream from user.
