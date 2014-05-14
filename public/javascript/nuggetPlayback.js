@@ -15,14 +15,30 @@
 
   $(document).ready(function(){
     connect_to_chat_firebase();
+
+    $("#play").click(function(event) {
+      document.getElementById("video_elem").play();
+      document.getElementById("audio_elem").play();
+    });
+
+    $("#pause").click(function(event) {
+      document.getElementById("video_elem").pause();
+      document.getElementById("audio_elem").pause();
+    });
+
+    $("#stop").click(function(event) {
+      document.getElementById("video_elem").pause();
+      document.getElementById("audio_elem").pause();
+      document.getElementById("video_elem").currentTime = 0;
+      document.getElementById("audio_elem").currentTime = 0;
+    });
   });
 
   function connect_to_chat_firebase(){
-
     var address = document.URL.split("/");
     fb_nugget_id = address[address.length - 1];
 
-    fb_instance = new Firebase("https://resplendent-fire-793.firebaseio.com/nuggets/" + fb_nugget_id + "/stream/");
+    fb_instance = new Firebase("https://resplendent-fire-793.firebaseio.com/nuggets/" + fb_nugget_id + "/");
 
     fb_instance.on('value', function(snapshot) {
       if(snapshot.val() === null) {
@@ -34,26 +50,36 @@
   }
 
   function display_vid(data) {    
-    data = data[Object.keys(data)[0]];
-
     var video = document.createElement("video");
     video.autoplay = false;
-    video.controls = true; // optional
+    video.controls = false; // optional
     video.loop = false;
     video.width = 640;
     video.height = 480;
+    video.id = "video_elem";
 
     var source = document.createElement("source");
-    source.src =  URL.createObjectURL(base64_to_blob(data.v));
+    var vid_blob = base64_to_blob(data.v);
+    vid_blob.type = "video/webm"
+    source.src =  URL.createObjectURL(vid_blob);
     source.type =  "video/webm";
 
     video.appendChild(source);
+
+    var audio = document.createElement("audio");
+    audio.controls = false;
+    audio.id = "audio_elem";
+    var audio_blob = base64_to_blob(data.a);
+    audio_blob.type = "audio/wav";
+    audio.src = URL.createObjectURL(audio_blob);
+    audio.type = "audio/wav";
 
     // for gif instead, use this code below and change mediaRecorder.mimeType in onMediaSuccess below
     // var video = document.createElement("img");
     // video.src = URL.createObjectURL(base64_to_blob(data.v));
 
     document.getElementById("webcam_stream").appendChild(video);
+    document.getElementById("audio_container").appendChild(audio);
   }
 
   function scroll_to_bottom(wait_time){
@@ -122,19 +148,6 @@
     // get video stream from user. see https://github.com/streamproc/MediaStreamRecorder
     navigator.getUserMedia(mediaConstraints, onMediaSuccess, onMediaError);
   }
-
-  // some handy methods for converting blob to base 64 and vice versa
-  // for performance bench mark, please refer to http://jsperf.com/blob-base64-conversion/5
-  // note using String.fromCharCode.apply can cause callstack error
-  var blob_to_base64 = function(blob, callback) {
-    var reader = new FileReader();
-    reader.onload = function() {
-      var dataUrl = reader.result;
-      var base64 = dataUrl.split(',')[1];
-      callback(base64);
-    };
-    reader.readAsDataURL(blob);
-  };
 
   var base64_to_blob = function(base64) {
     var binary = atob(base64);

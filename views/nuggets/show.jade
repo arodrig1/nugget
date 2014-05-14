@@ -7,7 +7,14 @@ block content
   p. Look at the NUGGET your child has sent!! 
 
   div#webcam_stream
-  div#video_container
+  div#audio_container
+
+  button(id="play", data-action="bea").
+    Play
+  button(id="pause", data-action="bea").
+    Pause
+  button(id="stop", data-action="bea").
+    Stop
 
   script(src='/javascript/nuggetPlayback.js')
 

@@ -10,16 +10,16 @@
   var cur_video_blob = null;
   var fb_instance;
   var username = null;
-  var fb_chat_room_id = null;
-  //var fb_new_chat_room;
-  //var fb_instance_users;
-  //var fb_instance_stream;
-  //var my_color;
-  var mediaRecorder;
+  var fb_nugget_id = null;
+  var fb_new_nugget = null;
+  var ready;
 
   $(document).ready(function(){
-    connect_to_chat_firebase();
+    connect_to_firebase();
+    prompt_username();
+    set_button_handlers();
     connect_webcam();
+
     $("#recordbar").progressbar({ 
       value: BAR_MIN,
       max: BAR_MAX,
@@ -29,11 +29,12 @@
       }
     });
     $("#stop").prop("disabled", true);
-    $("#addpics").prop("disabled", true);
+    $("#clear").prop("disabled", true);
+    $("#clear").hide();
     $("#send").prop("disabled", true);
   });
 
-  function connect_to_chat_firebase(){
+  function connect_to_firebase(){
     /* Include your Firebase link here!*/
     fb_instance = new Firebase("https://resplendent-fire-793.firebaseio.com");
 
@@ -42,14 +43,12 @@
 
     // set up variables to access firebase data structure
     fb_new_nugget = fb_instance.child('nuggets').child(fb_nugget_id);
-    fb_instance_stream = fb_new_nugget.child('stream');
 
-    // listen to events
-    fb_instance_stream.on("child_added", function(snapshot) {
-      //display_msg(snapshot.val());
-      console.log("Video added to firebase stream!");
-    });
+    console.log("Nugget id: " + fb_nugget_id);
+    $("#_nugget_id_input").val(fb_nugget_id);
+  }
 
+  function prompt_username() {
     // block until username is answered
     username = window.prompt("Welcome! Please enter your name, as you would like your recipients to see it:");
     if(!username){
@@ -57,18 +56,48 @@
     }
 
     $("#waiting").remove();
+  }
 
+    
+  function set_button_handlers() {
     $("#start").click(function(event) {
       $(this).prop("disabled", true);
       $("#stop").prop("disabled", false);
-      mediaRecorder.start(VID_MAX);
+      if (ready == 2) {
+        recordRTC_Audio.startRecording();
+        //setTimeout(function() { recordRTC_Video.startRecording(); }, 1000);
+        recordRTC_Video.startRecording();
+      } else {
+        alert("Allow audio and video first!");
+      }      
     });
 
     $("#stop").click(function(event) {
       $(this).prop("disabled", true);
-      $("#addpics").prop("disabled", false);
       $("#recordbar").progressbar("value", BAR_MIN);
-      mediaRecorder.stop();
+
+      recordRTC_Video.stopRecording(function(videoURL) {
+        datauri_to_blob(videoURL, function(blob) {
+          blob_to_base64(blob, function(base64){
+            fb_new_nugget.child("v").set(base64);
+            console.log("Nugget v entry set!");
+          });
+        });        
+      });
+
+      recordRTC_Audio.stopRecording(function(audioURL) {
+        datauri_to_blob(audioURL, function(blob) {
+          blob_to_base64(blob, function(base64){
+            fb_new_nugget.child("f").set(username);
+            fb_new_nugget.child("a").set(base64);
+            console.log("Nugget f and a entries set!");
+          });
+        });
+      });
+
+      $("#clear").prop("disabled", false);
+      $("#clear").show();
+      $("#send").prop("disabled", false);
     });
 
     $("#send").click(function(event) {
@@ -76,47 +105,11 @@
     });
   }
 
-  // creates a message node and appends it to the conversation
-  function display_msg(data){
-    $("#conversation").append("<div class='msg' style='color:"+data.c+"'>"+data.m+"</div>");
-    if(data.v){
-      // for video element
-      var video = document.createElement("video");
-      video.autoplay = true;
-      video.controls = false; // optional
-      video.loop = true;
-      video.width = 120;
+  function connect_webcam() {
+    ready = 0; // use a counter to make sure audio and video are all ready
 
-      var source = document.createElement("source");
-      source.src =  URL.createObjectURL(base64_to_blob(data.v));
-      source.type =  "video/webm";
-
-      video.appendChild(source);
-
-      // for gif instead, use this code below and change mediaRecorder.mimeType in onMediaSuccess below
-      // var video = document.createElement("img");
-      // video.src = URL.createObjectURL(base64_to_blob(data.v));
-
-      document.getElementById("conversation").appendChild(video);
-    }
-  }
-
-  function scroll_to_bottom(wait_time){
-    // scroll to bottom of div
-    setTimeout(function(){
-      $("html, body").animate({ scrollTop: $(document).height() }, 200);
-    }, wait_time);
-  }
-
-  function connect_webcam(){
-    // we're only recording video, not audio
-    var mediaConstraints = {
-      video: true,
-      audio: false
-    };
-
-    // callback for when we get video stream from user.
-    var onMediaSuccess = function(stream) {
+    // record video
+    navigator.getUserMedia({video: true}, function(mediaStream) {
       // create video element, attach webcam stream to video element
       var video_width= 640;
       var video_height= 480;
@@ -128,49 +121,38 @@
           controls: false,
           width: video_width,
           height: video_height,
-          src: URL.createObjectURL(stream)
+          src: URL.createObjectURL(mediaStream)
       });
       video.play();
       webcam_stream.appendChild(video);
-
       var video_container = document.getElementById('video_container');
-      mediaRecorder = new MediaStreamRecorder(stream);
-      var index = 1;
 
-      mediaRecorder.mimeType = 'video/webm';
-      // mediaRecorder.mimeType = 'image/gif';
-      // make recorded media smaller to save some traffic (80 * 60 pixels, 3*24 frames)
-      mediaRecorder.video_width = video_width/2;
-      mediaRecorder.video_height = video_height/2;
+      window.recordRTC_Video = RecordRTC(mediaStream, {type:"video"});
+      ready += 1;
+    }, function(failure){
+      console.log(failure);
+    });
 
-      mediaRecorder.ondataavailable = function (blob) {
-          video_container.innerHTML = "";
-
-          // convert data into base 64 blocks
-          blob_to_base64(blob, function(b64_data){
-            cur_video_blob = b64_data;
-            //fb_instance_stream.push({ f: username, m: $("#submission input").val(), v: cur_video_blob });
-            fb_instance_stream.push({ f: username, v: cur_video_blob });
-          });
-
-          $("#send").prop("disabled", false);
-      };
-
-      console.log("Connected to media stream!");
-    }
-
-    // callback if there is an error when we try and get the video stream
-    var onMediaError = function(e) {
-      console.error('media error', e);
-    }
-
-    // get video stream from user. see https://github.com/streamproc/MediaStreamRecorder
-    navigator.getUserMedia(mediaConstraints, onMediaSuccess, onMediaError);
+    navigator.getUserMedia({audio: true}, function(mediaStream) {
+      window.recordRTC_Audio = RecordRTC(mediaStream);
+      ready += 1;
+    },function(failure){
+      console.log(failure);
+    });
   }
 
-  // some handy methods for converting blob to base 64 and vice versa
-  // for performance bench mark, please refer to http://jsperf.com/blob-base64-conversion/5
-  // note using String.fromCharCode.apply can cause callstack error
+  function datauri_to_blob(dataURI,callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', dataURI, true);
+    xhr.responseType = 'blob';
+    xhr.onload = function(e) {
+      if (this.status == 200) {
+        callback(this.response);
+      }
+    };
+    xhr.send();
+  }
+
   var blob_to_base64 = function(blob, callback) {
     var reader = new FileReader();
     reader.onload = function() {
@@ -179,18 +161,6 @@
       callback(base64);
     };
     reader.readAsDataURL(blob);
-  };
-
-  var base64_to_blob = function(base64) {
-    var binary = atob(base64);
-    var len = binary.length;
-    var buffer = new ArrayBuffer(len);
-    var view = new Uint8Array(buffer);
-    for (var i = 0; i < len; i++) {
-      view[i] = binary.charCodeAt(i);
-    }
-    var blob = new Blob([view]);
-    return blob;
   };
 
 })();

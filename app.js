@@ -43,7 +43,7 @@ require('./config/passport')(passport);
 
 app.get('/', index.view);
 app.get('/nuggets/new', nuggets.create);
-app.post('/nuggets', nuggets.save);
+app.post('/nuggets/send', nuggets.send);
 app.get('/nuggets/:id', nuggets.show);
 
 app.get('/login', authentication.login);

@@ -8,27 +8,24 @@ var _show = function(req, res) {
   res.render('nuggets/show', { 'id': req.id });
 }
 
-var _save = function(req, res) {
-  /*Timing.create("Ride request", req.body.testSet, req.body.elapsed, function(){});
-  var newRide = {
-    driverUsername: "bayian",//CHANGE ME!
-    driver: "Bayian",//CHANGE ME!
-    driverTel: "555-555-5555",
-    riderUsername: req.user.username,
-    rider: req.user.Name,
-    to: req.body.dropdown2,
-    from: req.body.dropdown1,
-    date: req.body.date,
-    time: req.body.ridetime,
-    riderTel: req.user.tel
-  };
-  User.saveRide(req.user, newRide, function(){});*/
-  req.flash('info', "Nugget created!");
-  res.redirect('/');
+var _send = function(req, res) {
+  var mail = require("nodemailer").mail;
+  var nugget_id = req.body.nugget_id;
+  var email = req.body.email;
+
+  mail({
+      from: "Team Nugget ✔ <mangonugget247@gmail.com>", // sender address
+      to: email, // list of receivers
+      subject: "You've received a new nugget!", // Subject line
+      html: "<h3>Hi there!</h3><p>Somebody has just sent you a new nugget! Click <a href='mango-nugget.herokuapp.com/nuggets/" + nugget_id +"'>here</a> to watch it!</p>"
+  });
+
+  req.flash('info', "Nugget sent!");
+  res.redirect('/nuggets/new');
 }
 
 module.exports = {
     create: _create,
     show: _show,
-    save: _save
+    send: _send
 }

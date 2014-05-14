@@ -28,6 +28,8 @@
     "passport-local": "*",
     "express3-handlebars": "*",
     "express-partials": "*",
-    "crypto": "*"
+    "crypto": "*",
+    "nodemailer": "*",
+    "recordrtc": "*"
   }
 }
