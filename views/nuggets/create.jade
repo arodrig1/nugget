@@ -20,9 +20,10 @@ block content
     Clear
 
   form(action='/nuggets/send', method='post')
-    input(type="hidden" id="nugget_id_input")
+    input(type="hidden" name="nugget_id" id="nugget_id_input")
+    label(for="email").Recipient Email Address:
     input(type="email" name="email")
-    input(type="submit" value="Send" id="send", data-action="bea")
+    input(type="submit" value="Send!" id="send", data-action="bea")
 
   script(src='/javascript/nuggetRecord.js')
 

@@ -45,7 +45,7 @@
     fb_new_nugget = fb_instance.child('nuggets').child(fb_nugget_id);
 
     console.log("Nugget id: " + fb_nugget_id);
-    $("#_nugget_id_input").val(fb_nugget_id);
+    $("#nugget_id_input").val(fb_nugget_id);
   }
 
   function prompt_username() {
@@ -100,9 +100,13 @@
       $("#send").prop("disabled", false);
     });
 
-    $("#send").click(function(event) {
-      alert("Send this link to MOMMY!: " + window.location.origin + "/nuggets/" + fb_nugget_id);
-    });
+    $("#clear").click(function(event) {
+      $("#stop").click();
+      $("#start").prop("disabled", false);
+      $("#clear").prop("disabled", true);
+      $("#clear").hide();
+      $("#send").prop("disabled", true);
+    })
   }
 
   function connect_webcam() {

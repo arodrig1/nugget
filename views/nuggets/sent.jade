@@ -1,0 +1,14 @@
+extends layout
+
+block content
+  h1 NUGGET
+
+  div.description
+    p.
+      Your nugget has been sent! You can view it
+    a(href=nugget_url).
+      here
+
+  a(href="/")
+    button(id="home_btn").
+      Home
