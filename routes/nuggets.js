@@ -44,7 +44,7 @@ var _send = function(req, res) {
   });
 
   req.flash('info', "Nugget sent!");
-  res.render('nuggets/sent', { 'nugget_id': nugget_id });
+  res.render('nuggets/sent', { 'nugget_url': "/nuggets/" + nugget_id });
 }
 
 module.exports = {
