@@ -61,9 +61,9 @@
     
   function set_button_handlers() {
     $("#start").click(function(event) {
-      $(this).prop("disabled", true);
-      $("#stop").prop("disabled", false);
       if (ready == 2) {
+        $(this).prop("disabled", true);
+        $("#stop").prop("disabled", false);
         recordRTC_Audio.startRecording();
         //setTimeout(function() { recordRTC_Video.startRecording(); }, 1000);
         recordRTC_Video.startRecording();
