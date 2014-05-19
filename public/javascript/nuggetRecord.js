@@ -64,9 +64,9 @@
       if (ready == 2) {
         $(this).prop("disabled", true);
         $("#stop").prop("disabled", false);
+        recordRTC_Video.startRecording();
         recordRTC_Audio.startRecording();
         //setTimeout(function() { recordRTC_Video.startRecording(); }, 1000);
-        recordRTC_Video.startRecording();
       } else {
         alert("Allow audio and video first!");
       }      
@@ -111,9 +111,11 @@
 
   function connect_webcam() {
     ready = 0; // use a counter to make sure audio and video are all ready
+    console.log("in webcam");
 
     // record video
     navigator.getUserMedia({video: true}, function(mediaStream) {
+      console.log("in video permissions");
       // create video element, attach webcam stream to video element
       var video_width= 640;
       var video_height= 480;
@@ -132,13 +134,16 @@
       var video_container = document.getElementById('video_container');
 
       window.recordRTC_Video = RecordRTC(mediaStream, {type:"video"});
+      console.log("+1 to ready");
       ready += 1;
     }, function(failure){
+      console.log("video didn't work");
       console.log(failure);
     });
 
     navigator.getUserMedia({audio: true}, function(mediaStream) {
       window.recordRTC_Audio = RecordRTC(mediaStream);
+      console.log("before audio");
       ready += 1;
     },function(failure){
       console.log(failure);
