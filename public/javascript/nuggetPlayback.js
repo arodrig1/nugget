@@ -20,9 +20,45 @@
   var fb_response_id = null;
   var fb_new_response = null;
 
+  var tour = new Tour({
+    storage: false,
+    steps: [
+    {
+      orphan: true,
+      backdrop: true,
+      title: "Get ready to watch a nugget!",
+      content: "To get started, let us get ready to record your response by clicking \"allow\" on the top right corner for both video AND audio."
+    },
+    {
+      element: "#play",
+      title: "Start watching!",
+      content: "Click this button to watch the nugget you just received."
+    },
+    {
+      element:"#pause",
+      title: "Have to go?",
+      content: "Hit this if you need to leave midway through the nugget."
+    },
+    {
+      element: "#clear",
+      title: "A second chance",
+      content: "If you think you weren't interesting enough the first time around, go ahead and start over by clearing your previous attempt."
+    },
+    {
+      element: "#stop",
+      title: "Start over",
+      content: "Hit this to start stop the nugget where it is and start it over again."
+    },
+    {
+      element: "#respond",
+      title: "Send your child an answer",
+      content: "Hit this button to start recording your response!  You will see a countdown above the video and it will record for a maximum of 30 seconds."
+    }]
+  });
+
   $(document).ready(function(){
-    prompt_instructions();
     authorize_media();
+    prompt_instructions();
     connect_to_chat_firebase();
 
     $("#play").click(function(event) {
@@ -58,7 +94,8 @@
   });
 
   function prompt_instructions() {
-    alert("You must allow video and audio before you can watch the nugget!");
+    tour.init();
+    tour.start();
   }
 
   function connect_to_chat_firebase(){
