@@ -21,8 +21,14 @@ block content
 
   form(action='/nuggets/send', method='post')
     input(type="hidden" name="nugget_id" id="nugget_id_input")
-    label(for="email").Recipient Email Address:
-    input(type="email" name="email")
+    label(for="name"). Your Name:
+    input(type="text" name="name")
+    br()
+    label(for="from"). Your Email Address:
+    input(type="email" name="from")
+    br()
+    label(for="to"). Recipient Email Address:
+    input(type="email" name="to")
     input(type="submit" value="Send!" id="send", data-action="bea")
 
   script(src='/javascript/nuggetRecord.js')
