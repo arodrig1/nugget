@@ -19,7 +19,7 @@ block content
   button(id="clear", data-action="bea").
     Clear
 
-  form(action='/nuggets/send', method='post')
+  form(action='/nuggets/send', method='post', id='submit_form')
     input(type="hidden" name="nugget_id" id="nugget_id_input")
     label(for="name"). Your Name:
     input(type="text" name="name")
@@ -32,4 +32,5 @@ block content
     input(type="submit" value="Send!" id="send", data-action="bea")
 
   script(src='/javascript/nuggetRecord.js')
+  
 
