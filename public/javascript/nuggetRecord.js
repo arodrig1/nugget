@@ -72,13 +72,6 @@
     $("#start").prop("disabled", false);
   });
 
-
-
-
-
-
-
-
   function connect_to_firebase(){
     /* Include your Firebase link here!*/
     fb_instance = new Firebase("https://resplendent-fire-793.firebaseio.com");

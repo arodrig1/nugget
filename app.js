@@ -45,6 +45,8 @@ app.get('/', index.view);
 app.get('/nuggets/new', nuggets.create);
 app.post('/nuggets/send', nuggets.send);
 app.get('/nuggets/:id', nuggets.show);
+app.post('/nuggets/respond', nuggets.respond);
+app.get('/responses/:id', nuggets.showResponse);
 
 app.get('/login', authentication.login);
 app.post('/login',
@@ -68,7 +70,7 @@ app.use(function(req, res, next) {
 });
 
 var MONGO = {
-    uri: process.env.MONGOHQ_URL || 'mongodb://localhost/disgoDB',
+    uri: process.env.MONGOHQ_URL || 'mongodb://localhost/nuggetDB',
     options: {
         server:{
             auto_reconnect: true,
@@ -84,7 +86,7 @@ var MONGO = {
     }
 }
 
-//mongoose.connect(MONGO.uri, MONGO.options);
+mongoose.connect(MONGO.uri, MONGO.options);
 
 function ensureAuthenticated(req, res, next) {
   console.log(req.isAuthenticated());

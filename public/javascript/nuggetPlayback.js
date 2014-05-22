@@ -12,8 +12,17 @@
   var username = null;
   var fb_chat_room_id = null;
   var mediaRecorder;
+  var ready;
+  var loadedVid = false;
+  var video_stream;
+  var audio_stream;
+
+  var fb_response_id = null;
+  var fb_new_response = null;
 
   $(document).ready(function(){
+    prompt_instructions();
+    authorize_media();
     connect_to_chat_firebase();
 
     $("#play").click(function(event) {
@@ -32,19 +41,44 @@
       document.getElementById("video_elem").currentTime = 0;
       document.getElementById("audio_elem").currentTime = 0;
     });
+
+    $("#respond").click(function(event) {
+      video_response();
+    });
+
+    $('#respond_form').submit(function(){
+      $.post($(this).attr('action'), $(this).serialize(), function(res){
+          // Do something with the response `res`
+          console.log(res);
+          alert("Response sent!");
+      });
+      return false;
+    });
+
   });
+
+  function prompt_instructions() {
+    alert("You must allow video and audio before you can watch the nugget!");
+  }
 
   function connect_to_chat_firebase(){
     var address = document.URL.split("/");
     fb_nugget_id = address[address.length - 1];
 
+    fb_response_id = Math.random().toString(36).substring(7);
+
     fb_instance = new Firebase("https://resplendent-fire-793.firebaseio.com/nuggets/" + fb_nugget_id + "/");
 
+    fb_new_response = fb_instance.child('response');
+
     fb_instance.on('value', function(snapshot) {
-      if(snapshot.val() === null) {
-        alert('Nugget not found!');
-      } else {
-        display_vid(snapshot.val());
+      if (loadedVid === false) {
+        if(snapshot.val() === null) {
+          alert('Nugget not found!');
+        } else {
+          display_vid(snapshot.val());
+          loadedVid = true;
+        }
       }
     });
   }
@@ -82,23 +116,33 @@
     document.getElementById("audio_container").appendChild(audio);
   }
 
-  function scroll_to_bottom(wait_time){
-    // scroll to bottom of div
-    setTimeout(function(){
-      $("html, body").animate({ scrollTop: $(document).height() }, 200);
-    }, wait_time);
+  function authorize_media() {
+    ready = 0; // use a counter to make sure audio and video are all ready
+
+    navigator.getUserMedia({video: true}, function(mediaStream) {
+      video_stream = mediaStream;
+      window.recordRTC_Video = RecordRTC(mediaStream, {type:"video"});
+      ready += 1;
+    }, function(failure){
+      console.log(failure);
+    });
+
+    navigator.getUserMedia({audio: true}, function(mediaStream) {
+      audio_stream = mediaStream;
+      window.recordRTC_Audio = RecordRTC(mediaStream);
+      ready += 1;
+    },function(failure){
+      console.log(failure);
+    });
   }
 
-  function connect_webcam(){
-    // we're only recording video, not audio
-    var mediaConstraints = {
-      video: true,
-      audio: false
-    };
+  function video_response() {
+      // hide nugget video and replace with webcam feed
+      document.getElementById("video_elem").pause();
+      document.getElementById("audio_elem").pause();
+      $("#video_elem").hide();
 
-    // callback for when we get video stream from user.
-    var onMediaSuccess = function(stream) {
-      // create video element, attach webcam stream to video element
+      // create new video element adn attach webcam stream
       var video_width= 640;
       var video_height= 480;
       var webcam_stream = document.getElementById('webcam_stream');
@@ -109,44 +153,59 @@
           controls: false,
           width: video_width,
           height: video_height,
-          src: URL.createObjectURL(stream)
+          src: URL.createObjectURL(video_stream)
       });
       video.play();
       webcam_stream.appendChild(video);
 
-      var video_container = document.getElementById('video_container');
-      mediaRecorder = new MediaStreamRecorder(stream);
-      var index = 1;
+      var time = 3;
+      $("#timer").html(time);
+      var timer_down = setInterval(function() {
+        $("#timer").html(time--);
+      }, 1000);
+      setTimeout(function() {
+        clearInterval(timer_down);
+        $("#timer").hide();
+      }, 3100);
 
-      mediaRecorder.mimeType = 'video/webm';
-      // mediaRecorder.mimeType = 'image/gif';
-      // make recorded media smaller to save some traffic (80 * 60 pixels, 3*24 frames)
-      mediaRecorder.video_width = video_width/2;
-      mediaRecorder.video_height = video_height/2;
+      recordRTC_Video.startRecording();
+      recordRTC_Audio.startRecording();
 
-      mediaRecorder.ondataavailable = function (blob) {
-          video_container.innerHTML = "";
+      setTimeout(function() {
+        recordRTC_Video.stopRecording(function(videoURL) {
+          datauri_to_blob(videoURL, function(blob) {
+            blob_to_base64(blob, function(base64){
+              fb_new_response.child("v").set(base64);
+              console.log("Response v entry set!");
+            });
+          });        
+        });
 
-          // convert data into base 64 blocks
-          blob_to_base64(blob, function(b64_data){
-            cur_video_blob = b64_data;
-            //fb_instance_stream.push({ f: username, m: $("#submission input").val(), v: cur_video_blob });
-            fb_instance_stream.push({ f: username, v: cur_video_blob });
+        recordRTC_Audio.stopRecording(function(audioURL) {
+          datauri_to_blob(audioURL, function(blob) {
+            blob_to_base64(blob, function(base64){
+              fb_new_response.child("f").set(username);
+              fb_new_response.child("a").set(base64);
+              console.log("Response f and a entries set!");
+            });
           });
+        });
 
-          $("#send").prop("disabled", false);
-      };
+        $("#respond_form").submit();
 
-      console.log("Connected to media stream!");
-    }
+      }, 30000);
+  }
 
-    // callback if there is an error when we try and get the video stream
-    var onMediaError = function(e) {
-      console.error('media error', e);
-    }
-
-    // get video stream from user. see https://github.com/streamproc/MediaStreamRecorder
-    navigator.getUserMedia(mediaConstraints, onMediaSuccess, onMediaError);
+  function datauri_to_blob(dataURI,callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', dataURI, true);
+    xhr.responseType = 'blob';
+    xhr.onload = function(e) {
+      if (this.status == 200) {
+        callback(this.response);
+      }
+    };
+    xhr.send();
   }
 
   var base64_to_blob = function(base64) {
@@ -159,6 +218,16 @@
     }
     var blob = new Blob([view]);
     return blob;
+  };
+
+  var blob_to_base64 = function(blob, callback) {
+    var reader = new FileReader();
+    reader.onload = function() {
+      var dataUrl = reader.result;
+      var base64 = dataUrl.split(',')[1];
+      callback(base64);
+    };
+    reader.readAsDataURL(blob);
   };
 
 })();
