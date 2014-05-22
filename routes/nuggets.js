@@ -10,7 +10,9 @@ var _show = function(req, res) {
 
 var _send = function(req, res) {
   var nugget_id = req.body.nugget_id;
-  var email = req.body.email;
+  var name = req.body.name;
+  var from = req.body.from;
+  var to = req.body.to;
 
   var nodemailer = require("nodemailer");
 
@@ -26,9 +28,9 @@ var _send = function(req, res) {
   // setup e-mail data with unicode symbols
   var mailOptions = {
         from: "Team Nugget <mangonugget247@gmail.com>", // sender address
-        to: email, // list of receivers
+        to: to, // list of receivers
         subject: "You've received a new nugget!", // Subject line
-        html: "<h3>Hi there!</h3><p>Somebody has just sent you a new nugget! Click <a href='mango-nugget.herokuapp.com/nuggets/" + nugget_id +"'>here</a> to watch it!</p>"
+        html: "<h3>Hi there!</h3><p>" + name + " has just sent you a new nugget! Click <a href='mango-nugget.herokuapp.com/nuggets/" + nugget_id +"'>here</a> to watch it!</p>"
   };
 
   // send mail with defined transport object

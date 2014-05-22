@@ -14,11 +14,9 @@
   var fb_new_nugget = null;
   var ready;
 
-  var tour;
-
   $(document).ready(function(){
     connect_to_firebase();
-    //prompt_username();
+    prompt_username();
     set_button_handlers();
     connect_webcam();
 
@@ -56,16 +54,19 @@
     if(!username){
       username = "anonymous" + Math.floor(Math.random()*1111);
     }
+
+    $("#waiting").remove();
   }
 
     
   function set_button_handlers() {
     $("#start").click(function(event) {
+      $(this).prop("disabled", true);
+      $("#stop").prop("disabled", false);
       if (ready == 2) {
-        recordRTC_Video.startRecording();
         recordRTC_Audio.startRecording();
-        $(this).prop("disabled", true);
-        $("#stop").prop("disabled", false);
+        //setTimeout(function() { recordRTC_Video.startRecording(); }, 1000);
+        recordRTC_Video.startRecording();
       } else {
         alert("Allow audio and video first!");
       }      
@@ -99,22 +100,16 @@
       $("#send").prop("disabled", false);
     });
 
-    $("#clear").click(function(event) {
-      $("#stop").click();
-      $("#start").prop("disabled", false);
-      $("#clear").prop("disabled", true);
-      $("#clear").hide();
-      $("#send").prop("disabled", true);
-    })
+    $("#send").click(function(event) {
+      alert("Send this link to MOMMY!: " + window.location.origin + "/nuggets/" + fb_nugget_id);
+    });
   }
 
   function connect_webcam() {
     ready = 0; // use a counter to make sure audio and video are all ready
-    console.log("in webcam");
 
     // record video
     navigator.getUserMedia({video: true}, function(mediaStream) {
-      console.log("in video permissions");
       // create video element, attach webcam stream to video element
       var video_width= 640;
       var video_height= 480;
@@ -133,16 +128,13 @@
       var video_container = document.getElementById('video_container');
 
       window.recordRTC_Video = RecordRTC(mediaStream, {type:"video"});
-      console.log("+1 to ready");
       ready += 1;
     }, function(failure){
-      console.log("video didn't work");
       console.log(failure);
     });
 
     navigator.getUserMedia({audio: true}, function(mediaStream) {
       window.recordRTC_Audio = RecordRTC(mediaStream);
-      console.log("before audio");
       ready += 1;
     },function(failure){
       console.log(failure);

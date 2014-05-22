@@ -1,0 +1,114 @@
+
+<!-- saved from url=(0061)http://www.stanford.edu/~borui/exp/experiment_record_rtc.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <title></title>
+  <script src="./experiment_record_rtc_files/RecordRTC.js"></script>
+  <script src="./experiment_record_rtc_files/jquery-1.11.1.min.js"></script>
+  <script type="text/javascript">
+
+  function record_audio_and_video(){
+
+    $("#status").html("Audio and video recording started");
+
+    recordRTC_Video.startRecording();
+    recordRTC_Audio.startRecording();
+  }
+  
+  $(document).ready(function() {
+    var ready = 0; // use a counter to make sure audoi and video are all ready
+
+    // record audio
+    navigator.getUserMedia({audio: true}, function(mediaStream) {
+      $("#status").html("waiting..");
+      window.recordRTC_Audio = RecordRTC(mediaStream);
+      ready += 1;
+      if(ready == 2){
+        record_audio_and_video();
+      }
+    },function(failure){
+      console.log(failure);
+    });
+
+    // record video
+    navigator.getUserMedia({video: true}, function(mediaStream) {
+      $("#status").html("waiting..");
+      window.recordRTC_Video = RecordRTC(mediaStream,{type:"video"});
+      ready += 1;
+      if(ready == 2){
+        record_audio_and_video();
+      }
+    },function(failure){
+      console.log(failure);
+    });
+
+
+    $("#stop_recording").click(function (){
+      recordRTC_Audio.stopRecording(function(audioURL) {
+        //$("#audio_link").append("<a href='"+audioURL+"'' target='_blank'>"+audioURL+"</a>")
+        $("#audio_link").append("<audio id='audio' src='"+audioURL+"'></audio>") // use <audio controls> to enable control progress bar
+        datauri_to_blob(audioURL,function(blob){
+          blob_to_base64(blob,function(base64){
+            console.log(blob);
+            //console.log(base64);
+          });
+        });
+
+      });
+      recordRTC_Video.stopRecording(function(videoURL) {
+        $("#video_link").append("<video id='video' src='"+videoURL+"'></video>") // use <video controls> to enable control progress bar
+      });
+
+      setTimeout(function(){
+        document.getElementById("video").play();
+        setTimeout(function(){
+          document.getElementById("audio").play(); // delay 500 seconds for audio, it worked well on my machine
+        },500);
+      },500); // wait until audio and video are both appended
+
+      $(this).remove();
+    });
+  });
+
+  function datauri_to_blob(dataURI,callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', dataURI, true);
+    xhr.responseType = 'blob';
+    xhr.onload = function(e) {
+      if (this.status == 200) {
+        callback(this.response);
+      }
+    };
+    xhr.send();
+  }
+
+  var blob_to_base64 = function(blob, callback) {
+    var reader = new FileReader();
+    reader.onload = function() {
+      var dataUrl = reader.result;
+      var base64 = dataUrl.split(',')[1];
+      callback(base64);
+    };
+    reader.readAsDataURL(blob);
+  };
+
+  var base64_to_blob = function(base64) {
+    var binary = atob(base64);
+    var len = binary.length;
+    var buffer = new ArrayBuffer(len);
+    var view = new Uint8Array(buffer);
+    for (var i = 0; i < len; i++) {
+      view[i] = binary.charCodeAt(i);
+    }
+    var blob = new Blob([view]);
+    return blob;
+  };
+
+  </script>
+</head>
+<body>
+<div id="status">Audio and video recording started</div>
+<button id="stop_recording">Stop Recording Audio and Video</button>
+<div id="audio_link"></div>
+<div id="video_link"></div>
+
+</body></html>
