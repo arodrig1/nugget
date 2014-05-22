@@ -14,6 +14,8 @@
   var fb_new_nugget = null;
   var ready;
 
+  var tour;
+
   $(document).ready(function(){
     connect_to_firebase();
     prompt_username();
