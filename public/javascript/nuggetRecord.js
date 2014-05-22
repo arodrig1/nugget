@@ -14,6 +14,37 @@
   var fb_new_nugget = null;
   var ready;
 
+  var tour = new Tour({
+    storage: false,
+    steps: [
+    {
+      orphan: true,
+      backdrop: true,
+      title: "Help us help you!",
+      content: "To get started, let us record you by clicking allow on the top right corner for both video AND audio."
+    },
+    {
+      element: "#start",
+      title: "This is how we do it",
+      content: "Click this button to start recording a (max 2 minute) video to your parents!"
+    },
+    {
+      element:"#stop",
+      title: "Done?",
+      content: "Once you've said what you came to say, hit this button to stop recording."
+    },
+    {
+      element: "#clear",
+      title: "A second chance",
+      content: "If you think you weren't interesting enough the first time around, go ahead and start over by clearing your previous attempt."
+    },
+    {
+      element: "#send",
+      title: "Share it!",
+      content: "Your name will appear in the email to the recipient and the recipient's response nugget will be sent to your email address."
+    }]
+  });
+
   $(document).ready(function(){
     connect_to_firebase();
     //prompt_username();
@@ -29,10 +60,16 @@
       }
     });
 
+    $("#start").prop("disabled", true);
     $("#stop").prop("disabled", true);
     $("#clear").prop("disabled", true);
     $("#clear").hide();
     $("#send").prop("disabled", true);
+
+    tour.init();
+    tour.start();
+
+    $("#start").prop("disabled", false);
   });
 
 
@@ -176,5 +213,7 @@
     };
     reader.readAsDataURL(blob);
   };
+
+
 
 })();
