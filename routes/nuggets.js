@@ -66,10 +66,11 @@ var _send = function(req, res) {
 }
 
 var _respond = function(req, res) {
-  var nugget_id = req.body.nugget_id;
+  var nugget_id = req.body.response_id;
   
   Nugget.findByFirebaseId(nugget_id, function(err, nugget) {
     nugget = nugget[0];
+    console.log(nugget);
 
     var nodemailer = require("nodemailer");
 
@@ -87,7 +88,7 @@ var _respond = function(req, res) {
           from: "Team Nugget <mangonugget247@gmail.com>", // sender address
           to: nugget.from, // list of receivers
           subject: "Your nugget's received a response!", // Subject line
-          html: "<h3>Hi there!</h3><p>A nugget you sent has received a response! Click <a href='mango-nugget.herokuapp.com/nuggets/" + nugget_id +"/response'>here</a> to watch it!</p>"
+          html: "<h3>Hi there!</h3><p>A nugget you sent has received a response! Click <a href='mango-nugget.herokuapp.com/responses/" + nugget_id +"'>here</a> to watch it!</p>"
     };
 
     // send mail with defined transport object

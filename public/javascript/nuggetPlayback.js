@@ -65,6 +65,8 @@
     var address = document.URL.split("/");
     fb_nugget_id = address[address.length - 1];
 
+    $("#response_id_input").val(fb_nugget_id);
+
     fb_response_id = Math.random().toString(36).substring(7);
 
     fb_instance = new Firebase("https://resplendent-fire-793.firebaseio.com/nuggets/" + fb_nugget_id + "/");
@@ -163,9 +165,16 @@
       var timer_down = setInterval(function() {
         $("#timer").html(time--);
       }, 1000);
+
+      var record_down;
+
       setTimeout(function() {
         clearInterval(timer_down);
-        $("#timer").hide();
+        time = 30;
+        $("#timer").html("Recording response... You have 30 seconds!");
+        record_down = setInterval(function() {
+          $("#timer").html("Recording response... You have " + time-- + " seconds!");
+        }, 1000);
       }, 3100);
 
       recordRTC_Video.startRecording();
@@ -191,6 +200,9 @@
           });
         });
 
+        clearInterval(record_down);
+
+        $("#timer").html("Done recording!");
         $("#respond_form").submit();
 
       }, 30000);
