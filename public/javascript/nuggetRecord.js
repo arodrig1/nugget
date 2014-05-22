@@ -28,11 +28,19 @@
         $(this).progressbar("value", BAR_MIN);
       }
     });
+
     $("#stop").prop("disabled", true);
     $("#clear").prop("disabled", true);
     $("#clear").hide();
     $("#send").prop("disabled", true);
   });
+
+
+
+
+
+
+
 
   function connect_to_firebase(){
     /* Include your Firebase link here!*/
