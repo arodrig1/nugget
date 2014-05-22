@@ -20,6 +20,8 @@
   var fb_response_id = null;
   var fb_new_response = null;
 
+  var record_down;
+
   var tour = new Tour({
     storage: false,
     steps: [
@@ -57,6 +59,8 @@
   });
 
   $(document).ready(function(){
+    $("#stop_response").hide();
+
     authorize_media();
     prompt_instructions();
     connect_to_chat_firebase();
@@ -82,13 +86,17 @@
       video_response();
     });
 
-    $('#respond_form').submit(function(){
+    $('#respond_form').submit(function(event) {
       $.post($(this).attr('action'), $(this).serialize(), function(res){
           // Do something with the response `res`
           console.log(res);
           alert("Response sent!");
       });
       return false;
+    });
+
+    $("#stop_response").click(function(event) {
+      stop_recording_response();
     });
 
   });
@@ -203,11 +211,10 @@
         $("#timer").html(time--);
       }, 1000);
 
-      var record_down;
-
       setTimeout(function() {
         clearInterval(timer_down);
         time = 30;
+        $("#stop_response").show();
         $("#timer").html("Recording response... You have 30 seconds!");
         record_down = setInterval(function() {
           $("#timer").html("Recording response... You have " + time-- + " seconds!");
@@ -218,31 +225,34 @@
       recordRTC_Audio.startRecording();
 
       setTimeout(function() {
-        recordRTC_Video.stopRecording(function(videoURL) {
-          datauri_to_blob(videoURL, function(blob) {
-            blob_to_base64(blob, function(base64){
-              fb_new_response.child("v").set(base64);
-              console.log("Response v entry set!");
-            });
-          });        
-        });
-
-        recordRTC_Audio.stopRecording(function(audioURL) {
-          datauri_to_blob(audioURL, function(blob) {
-            blob_to_base64(blob, function(base64){
-              fb_new_response.child("f").set(username);
-              fb_new_response.child("a").set(base64);
-              console.log("Response f and a entries set!");
-            });
-          });
-        });
-
-        clearInterval(record_down);
-
-        $("#timer").html("Done recording!");
-        $("#respond_form").submit();
-
+        stop_recording_response();
       }, 30000);
+  }
+
+  function stop_recording_response() {
+    recordRTC_Video.stopRecording(function(videoURL) {
+      datauri_to_blob(videoURL, function(blob) {
+        blob_to_base64(blob, function(base64){
+          fb_new_response.child("v").set(base64);
+          console.log("Response v entry set!");
+        });
+      });        
+    });
+
+    recordRTC_Audio.stopRecording(function(audioURL) {
+      datauri_to_blob(audioURL, function(blob) {
+        blob_to_base64(blob, function(base64){
+          fb_new_response.child("f").set(username);
+          fb_new_response.child("a").set(base64);
+          console.log("Response f and a entries set!");
+        });
+      });
+    });
+
+    clearInterval(record_down);
+
+    $("#timer").html("Done recording!");
+    $("#respond_form").submit();
   }
 
   function datauri_to_blob(dataURI,callback) {
