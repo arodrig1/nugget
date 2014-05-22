@@ -16,7 +16,7 @@
 
   $(document).ready(function(){
     connect_to_firebase();
-    prompt_username();
+    //prompt_username();
     set_button_handlers();
     connect_webcam();
 
@@ -54,19 +54,16 @@
     if(!username){
       username = "anonymous" + Math.floor(Math.random()*1111);
     }
-
-    $("#waiting").remove();
   }
 
     
   function set_button_handlers() {
     $("#start").click(function(event) {
       if (ready == 2) {
+        recordRTC_Video.startRecording();
+        recordRTC_Audio.startRecording();
         $(this).prop("disabled", true);
         $("#stop").prop("disabled", false);
-        recordRTC_Audio.startRecording();
-        //setTimeout(function() { recordRTC_Video.startRecording(); }, 1000);
-        recordRTC_Video.startRecording();
       } else {
         alert("Allow audio and video first!");
       }      
