@@ -72,13 +72,6 @@
     $("#start").prop("disabled", false);
   });
 
-
-
-
-
-
-
-
   function connect_to_firebase(){
     /* Include your Firebase link here!*/
     fb_instance = new Firebase("https://resplendent-fire-793.firebaseio.com");
@@ -181,7 +174,6 @@
 
     navigator.getUserMedia({audio: true}, function(mediaStream) {
       window.recordRTC_Audio = RecordRTC(mediaStream);
-      console.log("before audio");
       ready += 1;
     },function(failure){
       console.log(failure);

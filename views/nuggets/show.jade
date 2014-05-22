@@ -6,8 +6,11 @@ block content
   div.description
   p. Look at the NUGGET your child has sent!! 
 
+  div#timer(style="color: red; z-index: 999;")
   div#webcam_stream
   div#audio_container
+
+  div#recordbar
 
   button(id="play", data-action="bea").
     Play
@@ -16,9 +19,12 @@ block content
   button(id="stop", data-action="bea").
     Stop
 
-  a(href=respond_url)
-    button(id="respond", data-action="bea").
-      Send Response
+  form(action='/nuggets/respond', method='post', id='respond_form')
+    input(type="hidden" name="response_id" id="response_id_input")
+    input(type="hidden" name="to" value=sender_email)
+
+  button(id="respond", data-action="bea").
+    Send Response
 
   script(src='/javascript/nuggetPlayback.js')
 
