@@ -56,7 +56,7 @@
       max: BAR_MAX,
       complete: function(event, ui) {
         mediaRecorder.stop();
-        $(this).progressbar("value", BAR_MIN);
+        $(this).progressbar("value", BAR_MAX);
       }
     });
 
@@ -143,9 +143,9 @@
     });
 
     $("#clear").click(function(event) {
-      $("#stop").click();
-      $("#start").prop("disabled", false);
       $("#clear").prop("disabled", true);
+      $("#start").prop("disabled", false);
+      $("#clear").prop("disabled", false);
       $("#clear").hide();
       $("#send").prop("disabled", true);
     })
