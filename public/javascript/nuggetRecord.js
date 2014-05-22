@@ -137,7 +137,7 @@
     navigator.getUserMedia({audio: true}, function(mediaStream) {
       window.recordRTC_Audio = RecordRTC(mediaStream);
       ready += 1;
-    },function(failure){\
+    },function(failure){
       console.log(failure);
     });
   }
