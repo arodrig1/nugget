@@ -4,8 +4,11 @@ block content
   h1 NUGGET
 
   div.description
-    p Your nugget has been sent to #{to}!
-    p You can view it a(href=nugget_url).here
+
+    p 
+      You can view it 
+      a(href=nugget_url).
+        here
 
   a(href="/nuggets/new")
     button(id="home_btn").
