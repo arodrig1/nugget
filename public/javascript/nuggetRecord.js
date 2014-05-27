@@ -15,7 +15,7 @@
   var ready;
 
   var tour = new Tour({
-    storage: false,
+    // storage: false,
     steps: [
     {
       orphan: true,
@@ -47,13 +47,13 @@
 
   $(document).ready(function(){
     connect_to_firebase();
-    //prompt_username();
     set_button_handlers();
     connect_webcam();
 
     $("#recordbar").progressbar({ 
       value: BAR_MIN,
       max: BAR_MAX,
+      disabled: true,
       complete: function(event, ui) {
         mediaRecorder.stop();
         $(this).progressbar("value", BAR_MAX);
@@ -101,11 +101,18 @@
         recordRTC_Video.startRecording();
         recordRTC_Audio.startRecording();
         $(this).prop("disabled", true);
+        $("#recordbar").progressbar("enable");
         $("#stop").prop("disabled", false);
+        $("#recordbar").progressbar("value", $("#recordbar").progressbar("value")+1);
       } else {
         alert("Allow audio and video first!");
       }      
     });
+
+    $( "#recordbar" ).on( "progressbarchange", function( event, ui ) {
+      console.log($("#recordbar").progressbar("value"))
+      $("#recordbar").progressbar("value", $("#recordbar").progressbar("value")+1);
+    } );
 
     $("#stop").click(function(event) {
       $(this).prop("disabled", true);
