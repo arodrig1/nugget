@@ -1,11 +1,12 @@
 (function() {
 
   var BAR_MIN = 0;
-  var BAR_MAX = 100;
+  var BAR_MAX = 120;
   var BAR_RECORD_STEP = 1;
   // 2 mins
-  var VID_MAX = 120000;
+  var VID_MAX = 30000;
   //var REC_KEY = 220;
+  var progress_interval;
 
   var cur_video_blob = null;
   var fb_instance;
@@ -55,8 +56,7 @@
       max: BAR_MAX,
       disabled: true,
       complete: function(event, ui) {
-        mediaRecorder.stop();
-        $(this).progressbar("value", BAR_MAX);
+        $("#stop").click();
       }
     });
 
@@ -103,18 +103,16 @@
         $(this).prop("disabled", true);
         $("#recordbar").progressbar("enable");
         $("#stop").prop("disabled", false);
-        $("#recordbar").progressbar("value", $("#recordbar").progressbar("value")+1);
+        progress_interval = setInterval(function() {
+          $("#recordbar").progressbar("value", $("#recordbar").progressbar("value") + 1);
+        }, 250);
       } else {
         alert("Allow audio and video first!");
       }      
     });
 
-    $( "#recordbar" ).on( "progressbarchange", function( event, ui ) {
-      console.log($("#recordbar").progressbar("value"))
-      $("#recordbar").progressbar("value", $("#recordbar").progressbar("value")+1);
-    } );
-
     $("#stop").click(function(event) {
+      clearInterval(progress_interval);
       $(this).prop("disabled", true);
       $("#recordbar").progressbar("value", BAR_MIN);
 
