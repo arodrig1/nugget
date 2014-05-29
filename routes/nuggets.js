@@ -10,7 +10,7 @@ var _show = function(req, res) {
     if (err) throw err;
     //nugget = nugget.toObject();
     nugget = nugget[0];
-    res.render('nuggets/show', { 'sender_email': nugget.from });
+    res.render('nuggets/show', { 'sender_name': nugget.name, 'sender_email': nugget.from });
   });
 }
 
