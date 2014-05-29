@@ -114,7 +114,6 @@
     $("#stop").click(function(event) {
       clearInterval(progress_interval);
       $(this).prop("disabled", true);
-      $("#recordbar").progressbar("value", BAR_MIN);
 
       recordRTC_Video.stopRecording(function(videoURL) {
         datauri_to_blob(videoURL, function(blob) {
@@ -141,6 +140,7 @@
     });
 
     $("#clear").click(function(event) {
+      $("#recordbar").progressbar("value", BAR_MIN);
       $("#clear").prop("disabled", true);
       $("#start").prop("disabled", false);
       $("#clear").prop("disabled", false);
