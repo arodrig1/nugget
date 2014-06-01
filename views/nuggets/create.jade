@@ -27,13 +27,13 @@ block content
   form(action='/nuggets/send', method='post', id='submit_form')
     input(type="hidden" name="nugget_id" id="nugget_id_input")
     label(for="name"). Your Name:
-    input(type="text" name="name")
+    input(type="text" name="name" required)
     br()
     label(for="from"). Your Email Address:
     input(type="email" name="from")
     br()
     label(for="to"). Recipient Email Address:
-    input(type="email" name="to")
+    input(type="email" name="to" required)
     input(type="submit" value="Send!" id="send", data-action="bea")
 
   div#recordbar
