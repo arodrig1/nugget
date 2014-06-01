@@ -6,11 +6,6 @@ block content
   div.description
     p. Tell your parents the highlights of your day in less than 2 min!
 
-  div#waiting
-  div#video_container
-  div#audio_container
-
-  div#recordbar
 
   button(id="record", data-action="bea").
     Record
@@ -25,6 +20,10 @@ block content
   button(id="clear", data-action="bea").
     Clear
 
+  div#waiting
+  
+  div#video_container
+  div#audio_container
   form(action='/nuggets/send', method='post', id='submit_form')
     input(type="hidden" name="nugget_id" id="nugget_id_input")
     label(for="name"). Your Name:
@@ -36,6 +35,8 @@ block content
     label(for="to"). Recipient Email Address:
     input(type="email" name="to")
     input(type="submit" value="Send!" id="send", data-action="bea")
+
+  div#recordbar
 
   script(src='/javascript/nuggetRecord.js')
   
