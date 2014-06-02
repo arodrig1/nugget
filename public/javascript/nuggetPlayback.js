@@ -23,7 +23,6 @@
   var record_down;
 
   var tour = new Tour({
-    storage: false,
     steps: [
     {
       orphan: true,
