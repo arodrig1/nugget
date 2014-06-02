@@ -8,6 +8,11 @@
   //var REC_KEY = 220;
   var progress_interval;
 
+  var MAX_FIREBASE_BYTES = 10485760;
+  var FIREBASE_BLOCK_SIZE = MAX_FIREBASE_BYTES/5;
+  var NUM_VID_BLOCKS = 10;
+  var NUM_AUD_BLOCKS = 15;
+
   var cur_video_blob = null;
   var fb_instance;
   var username = null;
@@ -162,9 +167,11 @@
         datauri_to_blob(videoURL, function(blob) {
           attach_video(blob);
           blob_to_base64(blob, function(base64){
-            fb_new_nugget.child("f").set(username);
-            fb_new_nugget.child("v").set(base64);
-            console.log("Nugget f and v entries set!");
+            for (var i = 0; i < NUM_VID_BLOCKS; i++) {
+              var part = base64.substring(FIREBASE_BLOCK_SIZE * i, FIREBASE_BLOCK_SIZE * (i + 1));
+              fb_new_nugget.child("v" + i).set(part);
+            }
+            console.log("Nugget v entries set!");
           });
         });        
       });
@@ -173,8 +180,11 @@
         datauri_to_blob(audioURL, function(blob) {
           attach_audio(blob);
           blob_to_base64(blob, function(base64){
-            fb_new_nugget.child("a").set(base64);
-            console.log("Nugget a entry set!");
+            for (var i = 0; i < NUM_AUD_BLOCKS; i++) {
+              var part = base64.substring(FIREBASE_BLOCK_SIZE * i, FIREBASE_BLOCK_SIZE * (i + 1));
+              fb_new_nugget.child("a" + i).set(part);
+            }
+            console.log("Nugget a entries set!");
           });
         });
       });

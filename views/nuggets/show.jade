@@ -8,20 +8,20 @@ block content
     = sender_name
     |  has sent!
 
-  button.btn.btn-primary(id="play").
+  button.btn.btn-primary(id="play")
     span.glyphicon.glyphicon-play
     |  Play
-  button.btn.btn-primary(id="pause").
+  button.btn.btn-primary(id="pause")
     span.glyphicon.glyphicon-pause
     |  Pause
-  button.btn.btn-primary(id="stop").
+  button.btn.btn-primary(id="stop")
     span.glyphicon.glyphicon-stop
     |  Stop
 
   div#timer(style="color: red; z-index: 999;")
   button(id="stop_response", data-action="bea").
     I'm done, send it now!
-  div#webcam_stream
+  div#webcam_stream(style="height: 480px;")
   div#audio_container
 
   div#recordbar
