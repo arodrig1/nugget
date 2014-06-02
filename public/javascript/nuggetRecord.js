@@ -18,7 +18,7 @@
   var username = null;
   var fb_nugget_id = null;
   var fb_new_nugget = null;
-  var ready;
+  var ready = 0;
 
   var tour = new Tour({
     // storage: false,
@@ -68,17 +68,18 @@
     $("#record").prop("disabled", true);
     $("#stop").prop("disabled", true);
     $("#play").prop("disabled", true);
-    $("#play").hide();
+    //$("#play").hide();
     $("#pause").prop("disabled", true);
-    $("#pause").hide();
+    //$("#pause").hide();
     $("#rewind").prop("disabled", true);
-    $("#rewind").hide();
+    //$("#rewind").hide();
     $("#clear").prop("disabled", true);
-    $("#clear").hide();
+    //$("#clear").hide();
     $("#send").prop("disabled", true);
+    $("#continue").prop("disabled", true);
 
-    tour.init();
-    tour.start();
+    //tour.init();
+    //tour.start();
 
     $("#record").prop("disabled", false);
   });
@@ -97,16 +98,42 @@
     $("#nugget_id_input").val(fb_nugget_id);
   }
 
-  function prompt_username() {
-    // block until username is answered
-    username = window.prompt("Welcome! Please enter your name, as you would like your recipients to see it:");
-    if(!username){
-      username = "anonymous" + Math.floor(Math.random()*1111);
-    }
+  function connect_webcam() {
+    // record video
+    navigator.getUserMedia({video: true}, function(mediaStream) {
+      // create video element, attach webcam stream to video element
+      // create video element, attach webcam stream to video element
+      var video_width= 640;
+      var video_height= 480;
+      var webcam_stream = document.getElementById('video_container');
+      var video = document.createElement('video');
+      webcam_stream.innerHTML = "";
+      // adds these properties to the video
+      video = mergeProps(video, {
+          controls: false,
+          width: video_width,
+          height: video_height,
+          src: URL.createObjectURL(mediaStream)
+      });
+      video.play();
+      webcam_stream.appendChild(video);
+
+      window.recordRTC_Video = RecordRTC(mediaStream, {type:"video"});
+      ready += 1;
+    }, function(failure){
+      console.log(failure);
+    });
+
+    navigator.getUserMedia({audio: true}, function(mediaStream) {
+      window.recordRTC_Audio = RecordRTC(mediaStream);
+      ready += 1;
+    },function(failure){
+      console.log(failure);
+    });
   }
 
   function attach_video(video_blob) {
-    $("#video_container").empty();
+    $("#video_playback_container").empty();
 
     var video = document.createElement("video");
     video.autoplay = false;
@@ -123,7 +150,7 @@
 
     video.appendChild(source);
 
-    document.getElementById("video_container").appendChild(video);
+    document.getElementById("video_playback_container").appendChild(video);
   }
 
   function attach_audio(audio_blob) {
@@ -149,7 +176,6 @@
         recordRTC_Video.startRecording();
         recordRTC_Audio.startRecording();
         $(this).prop("disabled", true);
-        //$("#recordbar").progressbar("enable");
         $("#stop").prop("disabled", false);
         progress_interval = setInterval(function() {
           $("#recordbar").progressbar("value", $("#recordbar").progressbar("value") + 1);
@@ -190,41 +216,51 @@
       });
 
       $("#record").prop("disabled", true);
-      $("#record").hide();
+      //$("#record").hide();
       $("#stop").prop("disabled", true);
-      $("#stop").hide();
+      //$("#stop").hide();
 
       $("#play").prop("disabled", false);
-      $("#play").show();
-      $("#pause").show();
-      $("#rewind").show();
+      //$("#play").show();
+      //$("#pause").show();
+      //$("#rewind").show();
 
       $("#clear").prop("disabled", false);
-      $("#clear").show();
-      $("#send").prop("disabled", false);
+      //$("#clear").show();
+      $("#continue").prop("disabled", false);
+
+      $("#stepCarousel").carousel('next');
     });
 
     $("#clear").click(function(event) {
-      connect_webcam();
+      //connect_webcam();
       detach_audio();
+      $("#continue").prop("disabled", true);
       $("#send").prop("disabled", true);
 
       $("#play").prop("disabled", true);
-      $("#play").hide();
+      //$("#play").hide();
       $("#pause").prop("disabled", true);
-      $("#pause").hide();
+      //$("#pause").hide();
       $("#rewind").prop("disabled", true);
-      $("#rewind").hide();
+      //$("#rewind").hide();
 
       $("#clear").prop("disabled", true);
       $("#record").prop("disabled", false);
-      $("#record").show();
+      //$("#record").show();
       $("#stop").prop("disabled", true);
-      $("#stop").show();
-      $("#clear").hide();     
+      //$("#stop").show();
+      //$("#clear").hide();     
 
       $("#recordbar").progressbar("value", BAR_MIN);
+
+      $("#stepCarousel").carousel('prev');
     });
+
+    $("#continue").click(function(event) {
+      $("#send").prop("disabled", false);
+      $("#stepCarousel").carousel('next');
+    })
 
     $("#play").click(function(event) {
       $(this).prop("disabled", true);
@@ -249,42 +285,6 @@
       document.getElementById("video_elem").currentTime = 0;
       document.getElementById("audio_elem").currentTime = 0;
       $("#play").prop("disabled", false);
-    });
-  }
-
-  function connect_webcam() {
-    ready = 0; // use a counter to make sure audio and video are all ready
-
-    // record video
-    navigator.getUserMedia({video: true}, function(mediaStream) {
-      // create video element, attach webcam stream to video element
-      // create video element, attach webcam stream to video element
-      var video_width= 640;
-      var video_height= 480;
-      var webcam_stream = document.getElementById('video_container');
-      var video = document.createElement('video');
-      webcam_stream.innerHTML = "";
-      // adds these properties to the video
-      video = mergeProps(video, {
-          controls: false,
-          width: video_width,
-          height: video_height,
-          src: URL.createObjectURL(mediaStream)
-      });
-      video.play();
-      webcam_stream.appendChild(video);
-
-      window.recordRTC_Video = RecordRTC(mediaStream, {type:"video"});
-      ready += 1;
-    }, function(failure){
-      console.log(failure);
-    });
-
-    navigator.getUserMedia({audio: true}, function(mediaStream) {
-      window.recordRTC_Audio = RecordRTC(mediaStream);
-      ready += 1;
-    },function(failure){
-      console.log(failure);
     });
   }
 
