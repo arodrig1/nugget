@@ -4,10 +4,6 @@ body {
   text-align: center;
 }
 
-a {
-  color: #00B7FF;
-}
-
 h1 {
 	font-family: Garamond, serif;
 	line-height: 1em;
@@ -22,14 +18,3 @@ p {
 
 }
 
-button {
-	font-family: Garamond;
-	line-height: 1em;
-	color: white;
-	background-color: #52CC29;
-	font-size: 25px;
-}
-
-button:disabled {
-	background-color: gray;
-}

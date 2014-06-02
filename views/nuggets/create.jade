@@ -7,20 +7,24 @@ block content
     p. Tell your parents the highlights of your day in less than 2 min!
 
 
-  button(id="record", data-action="bea").
-    Record
-  button(id="stop", data-action="bea").
-    Stop
-  button(id="play", data-action="bea").
-    Play
-  button(id="pause", data-action="bea").
-    Pause
-  button(id="rewind", data-action="bea").
-    Rewind
-  button(id="clear", data-action="bea").
-
-
-
+  button.btn.btn-danger(type="button" id="record")
+    span.glyphicon.glyphicon-record
+    |  Record
+  button.btn.btn-success(type="button" id="stop")
+    span.glyphicon.glyphicon-stop
+    |  Stop
+  button.btn.btn-success(type="button" id="play")
+    span.glyphicon.glyphicon-play
+    |  Play
+  button.btn.btn-success(type="button" id="pause")
+    span.glyphicon.glyphicon-pause
+    |  Pause
+  button.btn.btn-success(type="button" id="rewind")
+    span.glyphicon.glyphicon-step-backward
+    |  Rewind
+  button.btn.btn-warning(type="button" id="clear")
+    span.glyphicon.glyphicon-remove-sign
+    |  Clear
 
   div#waiting
   
@@ -36,7 +40,7 @@ block content
     br()
     label(for="to"). Recipient Email Address:
     input(type="email" name="to" required)
-    input(type="submit" value="Send!" id="send", data-action="bea")
+    input(type="submit" value="Send!" id="send")
 
   div#recordbar
 

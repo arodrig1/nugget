@@ -8,11 +8,11 @@ block content
     = sender_name
     |  has sent!
 
-  button(id="play", data-action="bea").
+  button.btn.btn-primary(id="play").
     Play
-  button(id="pause", data-action="bea").
+  button.btn.btn-primary(id="pause").
     Pause
-  button(id="stop", data-action="bea").
+  button.btn.btn-primary(id="stop").
     Stop
 
   div#timer(style="color: red; z-index: 999;")
@@ -27,7 +27,7 @@ block content
     input(type="hidden" name="response_id" id="response_id_input")
     input(type="hidden" name="to" value=sender_email)
 
-  button(id="respond", data-action="bea").
+  button.btn.btn-success(id="respond", data-action="bea").
     Send Response
 
   script(src='/javascript/nuggetPlayback.js')
