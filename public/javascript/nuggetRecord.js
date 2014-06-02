@@ -1,10 +1,10 @@
 (function() {
 
   var BAR_MIN = 0;
-  var BAR_MAX = 120;
+  var BAR_MAX = 480;
   var BAR_RECORD_STEP = 1;
   // 2 mins
-  var VID_MAX = 30000;
+  var VID_MAX = 120000;
   //var REC_KEY = 220;
   var progress_interval;
 
@@ -211,7 +211,9 @@
       $("#record").show();
       $("#stop").prop("disabled", true);
       $("#stop").show();
-      $("#clear").hide();      
+      $("#clear").hide();     
+
+      $("#recordbar").progressbar("value", BAR_MIN);
     });
 
     $("#play").click(function(event) {
