@@ -64,6 +64,7 @@
     $("#play").prop("disabled", true);
     $("#pause").prop("disabled", true);
     $("#stop").prop("disabled", true);
+    $("#respond").prop("disabled", true);
     $("#stop_response").hide();
 
     authorize_media();
@@ -73,8 +74,8 @@
     $("#play").click(function(event) {
       document.getElementById("video_elem").play();
       document.getElementById("audio_elem").play();
-      $("#pause").prop("disabled", true);
-      $("#stop").prop("disabled", true);
+      $("#pause").prop("disabled", false);
+      $("#stop").prop("disabled", false);
     });
 
     $("#pause").click(function(event) {
@@ -135,6 +136,7 @@
         } else {
           display_vid(snapshot.val());
           $("#play").prop("disabled", false);
+          $("#respond").prop("disabled", false);
           loadedVid = true;
         }
       }
