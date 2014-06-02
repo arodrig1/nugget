@@ -111,10 +111,15 @@ var _showResponse = function(req, res) {
   res.render('nuggets/response');
 }
 
+var _landing = function(req, res) {
+  res.render('nuggets/landing');
+}
+
 module.exports = {
     create: _create,
     show: _show,
     send: _send,
     respond: _respond,
-    showResponse: _showResponse
+    showResponse: _showResponse,
+    landing: _landing
 }
