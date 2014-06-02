@@ -1,12 +1,19 @@
 extends layout
 
 block content
-  h1 NUGGET Recepient
+  h1 NUGGET Recipient
 
   div.description
   p Look at the nugget 
     = sender_name
     |  has sent!
+
+  button.btn.btn-primary(id="play").
+    Play
+  button.btn.btn-primary(id="pause").
+    Pause
+  button.btn.btn-primary(id="stop").
+    Stop
 
   div#timer(style="color: red; z-index: 999;")
   button(id="stop_response", data-action="bea").
@@ -15,13 +22,6 @@ block content
   div#audio_container
 
   div#recordbar
-
-  button.btn.btn-primary(id="play").
-    Play
-  button.btn.btn-primary(id="pause").
-    Pause
-  button.btn.btn-primary(id="stop").
-    Stop
 
   form(action='/nuggets/respond', method='post', id='respond_form')
     input(type="hidden" name="response_id" id="response_id_input")

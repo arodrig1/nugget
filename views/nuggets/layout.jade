@@ -1,11 +1,17 @@
 doctype html
-html
+html(lang='en')
   head
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
     title= title
-    link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
-    link(rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css")
-    link(rel='stylesheet', href='/stylesheets/bootstrap-tour-standalone.min.css')
-    link(rel='stylesheet', href='/stylesheets/style.css')
+
+    link(rel='stylesheet', href='/stylesheets/css/bootstrap.min.css')
+    link(rel='stylesheet', href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css")
+    link(rel='stylesheet', href='/stylesheets/css/bootstrap-tour-standalone.min.css')
+    link(rel='stylesheet', href='/stylesheets/css/style.css')
+
+    script(src='/javascript/js/bootstrap.min.js')
     script(src='/javascript/jquery-1.11.0.min.js')
     script(src='/javascript/jquery-ui-1.10.4.custom.min.js')
     script(src='/javascript/bootstrap.min.js')
@@ -15,8 +21,3 @@ html
 
   body
     block content
-
-
-
-
-   

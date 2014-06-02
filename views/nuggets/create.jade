@@ -6,11 +6,6 @@ block content
   div.description
     p. Tell your parents the highlights of your day in less than 2 min!
 
-  div#waiting
-  div#video_container
-  div#audio_container
-
-  div#recordbar
 
   button.btn.btn-danger(type="button" id="record")
     span.glyphicon.glyphicon-record
@@ -31,6 +26,10 @@ block content
     span.glyphicon.glyphicon-remove-sign
     |  Clear
 
+  div#waiting
+  
+  div#video_container
+  div#audio_container
   form(action='/nuggets/send', method='post', id='submit_form')
     input(type="hidden" name="nugget_id" id="nugget_id_input")
     label(for="name"). Your Name:
@@ -42,6 +41,8 @@ block content
     label(for="to"). Recipient Email Address:
     input(type="email" name="to" required)
     input(type="submit" value="Send!" id="send")
+
+  div#recordbar
 
   script(src='/javascript/nuggetRecord.js')
   
