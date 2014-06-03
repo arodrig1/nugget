@@ -1,12 +1,19 @@
 extends layout
 
 block content
-  h1 Nugget
+  div.navbar.navbar-inverse.navbar-static-top(role="navigation")
+    div.container
+      div.navbar-header
+        a.navbar-brand(href="#"). Nugget
+      div.collapse.navbar-collapse
+        ul.nav.navbar-nav.navbar-right
+          li
+            a#help(href="#"). Help
 
   div.description
   p Look at the nugget 
     = sender_name
-    |  has sent!
+    |  has sent you!
 
   button.btn.btn-primary(id="play")
     span.glyphicon.glyphicon-play
@@ -22,6 +29,8 @@ block content
   button(id="stop_response", data-action="bea").
     I'm done, send it now!
   div#webcam_stream(style="height: 480px;")
+    div#spinner.spinner
+      img(src="/images/ajax-loader.gif" alt="Loading...")
   div#audio_container
 
   div#recordbar
