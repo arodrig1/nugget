@@ -4,9 +4,13 @@ block content
   h1 Nugget
 
   div.description
-  p Look at the nugget 
+  p#welcome Look at the nugget 
     = sender_name
     |  has sent!
+
+  p#bye Thanks for sending 
+    = sender_name
+    |  a response!
 
   button.btn.btn-primary(id="play")
     span.glyphicon.glyphicon-play
@@ -19,8 +23,9 @@ block content
     |  Stop
 
   div#timer(style="color: red; z-index: 999;")
-  button(id="stop_response", data-action="bea").
+  button.btn.btn-danger(id="stop_response", data-action="bea").
     I'm done, send it now!
+
   div#webcam_stream(style="height: 480px;")
   div#audio_container
 
