@@ -14,10 +14,10 @@ body {
 
 @font-face {
   font-family: 'Caviar';
-  src: url('fonts/CaviarDreams.woff') format('woff');
-  src: local('Caviar Dreams'), local('Caviar'), url('fonts/caviar.woff') format('woff');
-  src: url('fonts/CaviarDreams.ttf') format('truetype');
-  src: local('Caviar Dreams'), local('Caviar'), url('fonts/caviar.ttf') format('truetype');
+  src: url('../fonts/CaviarDreams.woff') format('woff');
+  /*src: local('Caviar Dreams'), local('Caviar'), url('fonts/caviar.woff') format('woff');*/
+  src: url('../fonts/CaviarDreams.ttf') format('truetype');
+  /*src: local('Caviar Dreams'), local('Caviar'), url('fonts/caviar.ttf') format('truetype');*/
 }
 
 h1 {
@@ -26,12 +26,6 @@ h1 {
 	color: white;
 	background-color: #FF6600;
 	font-size: 100px;
-}
-
-p {
-	font-family: Garamond;
-	line-height: 1em;
-	color:black;
 }
 
 .navbar {
@@ -76,5 +70,5 @@ p {
 }
 
 .btn#home_btn{
-	width: 150px;
+	width: 160px;
 }
