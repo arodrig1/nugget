@@ -156,6 +156,8 @@
   }
 
   function display_vid(data) {
+    $("#spinner").hide();
+
     var vid_base64 = "";
     for (var i = 0; i < NUM_VID_BLOCKS; i++) {
       vid_base64 += data["v" + i];
