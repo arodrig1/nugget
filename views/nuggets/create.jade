@@ -12,17 +12,18 @@ block content
   div#stepCarousel.carousel.slide(data-ride="carousel" data-interval="false" data-wrap="false")
     div.carousel-inner
       div.item.active
-        div.container
-          button.btn.btn-danger(type="button" id="record")
-            span.glyphicon.glyphicon-record
-            |  Record
-          button.btn.btn-success(type="button" id="stop")
-            span.glyphicon.glyphicon-stop
-            |  Stop
-          div#video_container
-            video
-          div#recordbar
-          div#audio_container
+          div.col-lg-2
+          div.col-lg-8
+            div#video_container
+              video
+            div#recordbar
+            div#audio_container
+            button.btn.btn-danger(type="button" id="record")
+              span.glyphicon.glyphicon-record
+              |  Record
+            button.btn.btn-success(type="button" id="stop")
+              span.glyphicon.glyphicon-stop
+              |  Stop
       div.item
         div.container
           div.nav-button.col-lg-2
