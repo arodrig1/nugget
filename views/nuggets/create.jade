@@ -1,7 +1,6 @@
 extends layout
 
-block content
-  
+block content  
   div.navbar.navbar-inverse.navbar-static-top(role="navigation")
     div.container
       div.navbar-header
@@ -54,7 +53,7 @@ block content
             input(type="email" name="from")
             br()
             label(for="to"). Recipient Email Address:
-            input(type="email" name="to" required)
+            input(type="email" name="to" required multiple)
             button.btn.btn-success(type="submit" id="send")
               span.glyphicon.glyphicon-ok
               |  Send
