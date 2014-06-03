@@ -172,7 +172,6 @@
     
   function set_button_handlers() {
     $("#tour").click(function(event) {
-      console.log("trying to take tour");
       tour.init();
       tour.start();
       event.preventDefault();

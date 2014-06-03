@@ -1,7 +1,8 @@
 body {
   padding: 25px;
-  font: 18px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font: 20px "Caviar", Helvetica, Arial, sans-serif;
   text-align: center;
+  font-weight: 900;
   background-image: url('background.jpeg');
 }
 
@@ -9,6 +10,14 @@ body {
 	font-family: 'RieslingRegular';
 	src: url('fonts/riesling.eot');
 	src: local('Riesling Regular'), local('Riesling'), url('fonts/riesling.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Caviar';
+  src: url('fonts/CaviarDreams.woff') format('woff');
+  src: local('Caviar Dreams'), local('Caviar'), url('fonts/caviar.woff') format('woff');
+  src: url('fonts/CaviarDreams.ttf') format('truetype');
+  src: local('Caviar Dreams'), local('Caviar'), url('fonts/caviar.ttf') format('truetype');
 }
 
 h1 {
@@ -23,6 +32,18 @@ p {
 	font-family: Garamond;
 	line-height: 1em;
 	color:black;
+}
+
+.navbar {
+	font-family: 'Caviar', Helvetica, sans-serif;
+	font-size: 40px;
+	font-weight: normal;
+}
+
+.nugget-title {
+	font-family: 'Caviar', Helvetica, sans-serif;
+	font-size: 40px;
+	font-weight: normal;
 }
 
 #floater {
@@ -41,6 +62,12 @@ p {
 	height: 45px;
 	padding-right: 10px;
 	width: 130px;
+	font-size: 20px;
+	font-weight: 900;
+}
+
+.popover-content {
+	font-size: 13px;
 }
 
 .glyphicon {
