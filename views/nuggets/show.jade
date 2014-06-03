@@ -1,6 +1,5 @@
 extends layout
 
-
 block content  
   div.navbar.navbar-inverse.navbar-static-top(role="navigation")
     div.container
@@ -28,22 +27,15 @@ block content
   button.btn.btn-success(id="respond", data-action="bea").
     Send Response
 
-
   button.btn.btn-danger(id="stop_response", data-action="bea").
     Stop and send!
 
-<<<<<<< HEAD
+
   div#block
     div#timer(style="color: red; z-index: 999;")
 
     div#webcam_stream(style="height: 480px;")
     div#audio_container
-=======
-  div#webcam_stream(style="height: 480px;")
-    div#spinner.spinner
-      img(src="/images/ajax-loader.gif" alt="Loading...")
-  div#audio_container
->>>>>>> 02484701a4431a38b879592b60993fbfa78d17f9
 
   div#recordbar
 
