@@ -14,15 +14,6 @@ block content
     = sender_name
     |  has been sent!
 
-  button.btn.btn-primary(id="play")
-    span.glyphicon.glyphicon-play
-    |  Play
-  button.btn.btn-primary(id="pause")
-    span.glyphicon.glyphicon-pause
-    |  Pause
-  button.btn.btn-primary(id="stop")
-    span.glyphicon.glyphicon-stop
-    |  Stop
   button.btn.btn-success(id="respond", data-action="bea").
     Send Response
 
@@ -37,6 +28,16 @@ block content
     div#audio_container
 
   div#recordbar
+
+  button.btn.btn-primary(id="play")
+    span.glyphicon.glyphicon-play
+    |  Play
+  button.btn.btn-primary(id="pause")
+    span.glyphicon.glyphicon-pause
+    |  Pause
+  button.btn.btn-primary(id="stop")
+    span.glyphicon.glyphicon-stop
+    |  Stop
 
   form(action='/nuggets/respond', method='post', id='respond_form')
     input(type="hidden" name="response_id" id="response_id_input")
