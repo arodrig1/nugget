@@ -38,23 +38,29 @@ block content
             |  Rewind
           button.btn.btn-warning(type="button" id="clear")
             span.glyphicon.glyphicon-remove-sign
-            |  Back
+            |  Restart
           button.btn.btn-success(type="button" id="continue")
             span.glyphicon.glyphicon-chevron-right
             |  Continue
       div.item
         div.container
-          form(action='/nuggets/send', method='post', id='submit_form')
+          form.form-horizontal(action='/nuggets/send', method='post', id='submit_form' role="form")
             input(type="hidden" name="nugget_id" id="nugget_id_input")
-            label(for="name"). Your Name:
-            input(type="text" name="name" required)
-            br()
-            label(for="from"). Your Email Address:
-            input(type="email" name="from")
-            br()
-            label(for="to"). Recipient Email Address:
-            input(type="email" name="to" required multiple)
-            br
+            div.form-group
+              div.col-sm-2
+              label.col-sm-2.control-label(for="name"). Your Name:
+              div.col-sm-6
+                input.form-control(type="text" name="name" placeholder="as you would like your recipients to see it" required)
+            div.form-group
+              div.col-sm-2
+              label.col-sm-2.control-label(for="from"). Your Email Address:
+              div.col-sm-6
+                input.form-control(type="email" name="from" placeholder="where you would like to receive their response")
+            div.form-group
+              div.col-sm-2
+              label.col-sm-2.control-label(for="to"). Recipient Email Address:
+              div.col-sm-6
+                input.form-control(type="email" name="to" placeholder="separate multiple addresses with a comma" required multiple)
             button.btn.btn-success(type="submit" id="send")
               span.glyphicon.glyphicon-ok
               |  Send
