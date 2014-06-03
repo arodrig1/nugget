@@ -61,10 +61,12 @@
   });
 
   $(document).ready(function(){
+    $("#bye").hide();
     $("#play").prop("disabled", true);
     $("#pause").prop("disabled", true);
     $("#stop").prop("disabled", true);
-    $("#respond").prop("disabled", true);
+    // $("#respond").prop("disabled", true);
+    $("#respond").hide();
     $("#stop_response").hide();
 
     authorize_media();
@@ -72,11 +74,22 @@
     connect_to_chat_firebase();
 
     $("#play").click(function(event) {
+      $("#respond").hide();
       document.getElementById("video_elem").play();
       document.getElementById("audio_elem").play();
       $("#pause").prop("disabled", false);
       $("#stop").prop("disabled", false);
-    });
+      var player=document.getElementById("video_elem");
+      player.addEventListener('ended', allowToRespond,false);
+
+        function allowToRespond(e) {
+            if(!e) 
+            { e = window.event; }
+              $("#respond").show();
+              $("#pause").prop("disabled", true);
+              $("#stop").prop("disabled", true);
+            }
+        });
 
     $("#pause").click(function(event) {
       document.getElementById("video_elem").pause();
@@ -208,10 +221,14 @@
 
   function video_response() {
       // hide nugget video and replace with webcam feed
+      $("#respond").hide();
+      $("#play").hide();
+      $("#pause").hide();
+      $("#stop").hide();
       document.getElementById("video_elem").pause();
       document.getElementById("audio_elem").pause();
       $("#video_elem").hide();
-
+      
       // create new video element adn attach webcam stream
       var video_width= 640;
       var video_height= 480;
@@ -228,21 +245,12 @@
       video.play();
       webcam_stream.appendChild(video);
 
-      var time = 3;
-      $("#timer").html(time);
-      var timer_down = setInterval(function() {
-        $("#timer").html(time--);
-      }, 1000);
-
-      setTimeout(function() {
-        clearInterval(timer_down);
-        time = 30;
-        $("#stop_response").show();
-        $("#timer").html("Recording response... You have 30 seconds!");
-        record_down = setInterval(function() {
-          $("#timer").html("Recording response... You have " + time-- + " seconds!");
-        }, 1000);
-      }, 3100);
+      var time = 30;
+      $("#stop_response").show();
+      $("#timer").html("Recording response... You have 30 seconds!");
+      record_down = setInterval(function() {
+        $("#timer").html("Recording response... You have " + time-- + " seconds!");
+      }, 1000); 
 
       recordRTC_Video.startRecording();
       recordRTC_Audio.startRecording();
@@ -274,8 +282,13 @@
 
     clearInterval(record_down);
 
-    $("#timer").html("Done recording!");
+    $("#timer").hide();
     $("#respond_form").submit();
+    $("#webcam_stream").hide();
+    $("#stop_response").hide();
+    $("#welcome").hide();
+    $("#bye").show();
+
   }
 
   function datauri_to_blob(dataURI,callback) {
