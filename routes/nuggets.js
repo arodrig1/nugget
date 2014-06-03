@@ -8,9 +8,9 @@ var _create = function(req, res) {
 var _show = function(req, res) {
   Nugget.findByFirebaseId(req.params["id"], function(err, nugget) {
     if (err) throw err;
-    //nugget = nugget.toObject();
     nugget = nugget[0];
-    res.render('nuggets/show', { 'sender_name': nugget.name, 'sender_email': nugget.from });
+    if (nugget === undefined) res.redirect('/nuggets/new');
+    else res.render('nuggets/show', { 'sender_name': nugget.name, 'sender_email': nugget.from });
   });
 }
 
