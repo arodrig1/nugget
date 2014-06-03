@@ -26,9 +26,9 @@
   var record_down;
 
   var tour = new Tour({
+    storage: false,
     steps: [
     {
-      storage: false,
       orphan: true,
       backdrop: true,
       title: "Get ready to watch a nugget!",
@@ -70,8 +70,13 @@
     $("#respond").hide();
     $("#stop_response").hide();
 
+    $("#tour").click(function(event) {
+      tour.init();
+      tour.start();
+      event.preventDefault();
+    });
+
     authorize_media();
-    prompt_instructions();
     connect_to_chat_firebase();
 
     $("#play").click(function(event) {
@@ -94,12 +99,6 @@
               $("#stop").hide();//prop("disabled", true);
             }
         });
-
-    $("#tour").click(function(event) {
-      tour.init();
-      tour.start();
-      event.preventDefault();
-    });
     
     $("#pause").click(function(event) {
       document.getElementById("video_elem").pause();
@@ -130,11 +129,6 @@
       stop_recording_response();
     });
   });
-
-  function prompt_instructions() {
-    tour.init();
-    tour.start();
-  }
 
   function connect_to_chat_firebase(){
     var address = document.URL.split("/");

@@ -24,7 +24,6 @@
     storage: false,
     steps: [
     {
-      storage: false,
       orphan: true,
       backdrop: true,
       title: "Help us help you!",

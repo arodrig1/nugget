@@ -53,9 +53,11 @@ h1 {
 .btn{
 	height: 45px;
 	padding-right: 10px;
-	width: 130px;
+	width: 135px;
 	font-size: 20px;
 	font-weight: 900;
+	margin-left: 1px;
+	margin-right: 1px;
 }
 
 .popover-content {
@@ -69,4 +71,8 @@ h1 {
 
 .btn#home_btn{
 	width: 160px;
+}
+
+.nav-button {
+	padding-top: 210px;
 }

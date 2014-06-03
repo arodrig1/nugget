@@ -12,22 +12,25 @@ block content
 
   div#stepCarousel.carousel.slide(data-ride="carousel" data-interval="false" data-wrap="false")
     div.carousel-inner
-      
-      div.video-group.col-lg-8
-        div.item.active
-          div.container
-            div#video_container
-              video
-            div#recordbar
-            div#audio_container
-            button.btn.btn-danger(type="button" id="record")
-              span.glyphicon.glyphicon-record
-              |  Record
-            button.btn.btn-success(type="button" id="stop")
-              span.glyphicon.glyphicon-stop
-              |  Stop
-        div.item
-          div.container
+      div.item.active
+        div.container
+          div#video_container
+            video
+          div#recordbar
+          div#audio_container
+          button.btn.btn-danger(type="button" id="record")
+            span.glyphicon.glyphicon-record
+            |  Record
+          button.btn.btn-success(type="button" id="stop")
+            span.glyphicon.glyphicon-stop
+            |  Stop
+      div.item
+        div.container
+          div.nav-button.col-lg-2
+            button.btn.btn-warning(type="button" id="clear")
+              span.glyphicon.glyphicon-remove-sign
+              |  Restart
+          div.video-group.col-lg-8
             div#video_playback_container
             button.btn.btn-primary(type="button" id="play")
               span.glyphicon.glyphicon-play
@@ -38,15 +41,10 @@ block content
             button.btn.btn-primary(type="button" id="rewind")
               span.glyphicon.glyphicon-step-backward
               |  Rewind
-      div.item.col-lg-2
-        button.btn.btn-warning(type="button" id="clear")
-          span.glyphicon.glyphicon-remove-sign
-          |  Restart
-      div.item.col-lg-2
-        button.btn.btn-success(type="button" id="continue")
-          span.glyphicon.glyphicon-chevron-right
-          |  Continue
-      
+          div.nav-button.col-lg-2
+            button.btn.btn-success(type="button" id="continue")
+              span.glyphicon.glyphicon-chevron-right
+              |  Continue
 
       div.item
         div.container
