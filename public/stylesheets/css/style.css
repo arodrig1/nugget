@@ -25,13 +25,6 @@ p {
 	color:black;
 }
 
-#video_container {
-	height: 494px;
-	padding: 4px;
-	border-style: solid;
-	border-color: #FF6600;
-}
-
 #floater {
 	float:left;
 	height:50%;
@@ -42,4 +35,12 @@ p {
 	clear:both;
 	height:240px;
 	position: relative;
+}
+.btn{
+	height: 40px;
+	width: 100px;
+}
+.glyphicon {
+	position: relative;
+	top: 2px;
 }
