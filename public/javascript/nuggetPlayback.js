@@ -28,6 +28,7 @@
   var tour = new Tour({
     steps: [
     {
+      storage: false,
       orphan: true,
       backdrop: true,
       title: "Get ready to watch a nugget!",
@@ -94,6 +95,12 @@
             }
         });
 
+    $("#tour").click(function(event) {
+      tour.init();
+      tour.start();
+      event.preventDefault();
+    });
+    
     $("#pause").click(function(event) {
       document.getElementById("video_elem").pause();
       document.getElementById("audio_elem").pause();
