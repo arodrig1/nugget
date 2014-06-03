@@ -15,9 +15,7 @@ body {
 @font-face {
   font-family: 'Caviar';
   src: url('../fonts/CaviarDreams.woff') format('woff');
-  /*src: local('Caviar Dreams'), local('Caviar'), url('fonts/caviar.woff') format('woff');*/
   src: url('../fonts/CaviarDreams.ttf') format('truetype');
-  /*src: local('Caviar Dreams'), local('Caviar'), url('fonts/caviar.ttf') format('truetype');*/
 }
 
 h1 {
