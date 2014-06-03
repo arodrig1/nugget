@@ -53,6 +53,8 @@
   }
 
   function display_vid(data) {    
+    $("#spinner").hide();
+    
     var video = document.createElement("video");
     video.autoplay = false;
     video.controls = false; // optional
