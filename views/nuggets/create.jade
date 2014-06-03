@@ -8,7 +8,7 @@ block content
       div.collapse.navbar-collapse
         ul.nav.navbar-nav.navbar-right
           li
-            a#help(href="#"). Help
+            a#tour(href="#"). Take a Tour!
 
   div#stepCarousel.carousel.slide(data-ride="carousel" data-interval="false" data-wrap="false")
     div.carousel-inner
@@ -54,6 +54,7 @@ block content
             br()
             label(for="to"). Recipient Email Address:
             input(type="email" name="to" required multiple)
+            br
             button.btn.btn-success(type="submit" id="send")
               span.glyphicon.glyphicon-ok
               |  Send
