@@ -14,16 +14,16 @@ block content
     div.carousel-inner
       div.item.active
         div.container
-          div#video_container
-            video
-          div#recordbar
-          div#audio_container
           button.btn.btn-danger(type="button" id="record")
             span.glyphicon.glyphicon-record
             |  Record
           button.btn.btn-success(type="button" id="stop")
             span.glyphicon.glyphicon-stop
             |  Stop
+          div#video_container
+            video
+          div#recordbar
+          div#audio_container
       div.item
         div.container
           div.nav-button.col-lg-2
@@ -31,7 +31,7 @@ block content
               span.glyphicon.glyphicon-remove-sign
               |  Restart
           div.video-group.col-lg-8
-            div#video_playback_container
+           
             button.btn.btn-primary(type="button" id="play")
               span.glyphicon.glyphicon-play
               |  Play
@@ -41,6 +41,7 @@ block content
             button.btn.btn-primary(type="button" id="rewind")
               span.glyphicon.glyphicon-step-backward
               |  Rewind
+            div#video_playback_container
           div.nav-button.col-lg-2
             button.btn.btn-success(type="button" id="continue")
               span.glyphicon.glyphicon-chevron-right
