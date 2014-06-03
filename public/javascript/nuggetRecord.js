@@ -21,9 +21,10 @@
   var ready = 0;
 
   var tour = new Tour({
-    // storage: false,
+    storage: false,
     steps: [
     {
+      storage: false,
       orphan: true,
       backdrop: true,
       title: "Help us help you!",
@@ -78,8 +79,7 @@
     $("#send").prop("disabled", true);
     $("#continue").prop("disabled", true);
 
-    //tour.init();
-    //tour.start();
+    
 
     $("#record").prop("disabled", false);
   });
@@ -171,6 +171,13 @@
   }
     
   function set_button_handlers() {
+    $("#tour").click(function(event) {
+      console.log("trying to take tour");
+      tour.init();
+      tour.start();
+      event.preventDefault();
+    });
+
     $("#record").click(function(event) {
       if (ready == 2) {
         recordRTC_Video.startRecording();
