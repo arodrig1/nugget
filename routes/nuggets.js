@@ -9,7 +9,7 @@ var _show = function(req, res) {
   Nugget.findByFirebaseId(req.params["id"], function(err, nugget) {
     if (err) throw err;
     nugget = nugget[0];
-    if (nugget === undefined) res.redirect('/nuggets/new');
+    if (nugget === undefined) res.send(404);
     else res.render('nuggets/show', { 'sender_name': nugget.name, 'sender_email': nugget.from });
   });
 }
