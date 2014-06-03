@@ -1,6 +1,14 @@
 extends layout
 
 block content  
+  div.navbar.navbar-inverse.navbar-static-top(role="navigation")
+    div.container
+      div.navbar-header
+        a.navbar-brand(href="#"). Nugget
+      div.collapse.navbar-collapse
+        ul.nav.navbar-nav.navbar-right
+          li
+            a#help(href="#"). Help
 
   div#webcam_stream
   div#audio_container

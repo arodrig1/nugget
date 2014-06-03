@@ -1,16 +1,19 @@
 extends layout
 
-block content
-  h1 Nugget
+block content  
+  div.navbar.navbar-inverse.navbar-static-top(role="navigation")
+    div.container
+      div.navbar-header
+        a.navbar-brand(href="#"). Nugget
+      div.collapse.navbar-collapse
+        ul.nav.navbar-nav.navbar-right
+          li
+            a#help(href="#"). Help
 
   div.description
-  p#welcome Look at the nugget 
+  p#bye Your response to 
     = sender_name
-    |  has sent!
-
-  p#bye Thanks for sending 
-    = sender_name
-    |  a response!
+    |  has been sent!
 
   button.btn.btn-primary(id="play")
     span.glyphicon.glyphicon-play
@@ -21,13 +24,18 @@ block content
   button.btn.btn-primary(id="stop")
     span.glyphicon.glyphicon-stop
     |  Stop
+  button.btn.btn-success(id="respond", data-action="bea").
+    Send Response
 
-  div#timer(style="color: red; z-index: 999;")
   button.btn.btn-danger(id="stop_response", data-action="bea").
-    I'm done, send it now!
+    Stop and send!
 
-  div#webcam_stream(style="height: 480px;")
-  div#audio_container
+
+  div#block
+    div#timer(style="color: red; z-index: 999;")
+
+    div#webcam_stream(style="height: 480px;")
+    div#audio_container
 
   div#recordbar
 
@@ -35,8 +43,7 @@ block content
     input(type="hidden" name="response_id" id="response_id_input")
     input(type="hidden" name="to" value=sender_email)
 
-  button.btn.btn-success(id="respond", data-action="bea").
-    Send Response
+  
 
   script(src='/javascript/nuggetPlayback.js')
 

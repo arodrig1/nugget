@@ -26,22 +26,28 @@ p {
 }
 
 #floater {
-	float:left;
-	height:50%;
+	float: left;
+	height: 50%;
 	margin-bottom: -120px;
 }
 
 #content {
-	clear:both;
-	height:240px;
+	clear: both;
+	height: 240px;
 	position: relative;
 }
+
 .btn{
-	height: 40px;
-	width: 115px;
+	height: 45px;
 	padding-right: 10px;
+	width: 130px;
 }
+
 .glyphicon {
 	position: relative;
 	top: 2px;
+}
+
+.btn#home_btn{
+	width: 150px;
 }

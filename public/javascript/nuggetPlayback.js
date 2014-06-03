@@ -77,6 +77,9 @@
       $("#respond").hide();
       document.getElementById("video_elem").play();
       document.getElementById("audio_elem").play();
+      $("#pause").show();//prop("disabled", true);
+      $("#stop").show();//prop("disabled", true);
+
       $("#pause").prop("disabled", false);
       $("#stop").prop("disabled", false);
       var player=document.getElementById("video_elem");
@@ -86,8 +89,8 @@
             if(!e) 
             { e = window.event; }
               $("#respond").show();
-              $("#pause").prop("disabled", true);
-              $("#stop").prop("disabled", true);
+              $("#pause").hide();//prop("disabled", true);
+              $("#stop").hide();//prop("disabled", true);
             }
         });
 
@@ -112,9 +115,6 @@
 
     $('#respond_form').submit(function(event) {
       $.post($(this).attr('action'), $(this).serialize(), function(res){
-          // Do something with the response `res`
-          console.log(res);
-          alert("Response sent!");
       });
       return false;
     });
@@ -122,7 +122,6 @@
     $("#stop_response").click(function(event) {
       stop_recording_response();
     });
-
   });
 
   function prompt_instructions() {
@@ -157,6 +156,8 @@
   }
 
   function display_vid(data) {
+    $("#spinner").hide();
+
     var vid_base64 = "";
     for (var i = 0; i < NUM_VID_BLOCKS; i++) {
       vid_base64 += data["v" + i];
