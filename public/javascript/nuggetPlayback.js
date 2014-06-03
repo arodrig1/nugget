@@ -17,6 +17,9 @@
   var video_stream;
   var audio_stream;
 
+  var NUM_VID_BLOCKS = 10;
+  var NUM_AUD_BLOCKS = 15;
+
   var fb_response_id = null;
   var fb_new_response = null;
 
@@ -58,6 +61,10 @@
   });
 
   $(document).ready(function(){
+    $("#play").prop("disabled", true);
+    $("#pause").prop("disabled", true);
+    $("#stop").prop("disabled", true);
+    $("#respond").prop("disabled", true);
     $("#stop_response").hide();
 
     authorize_media();
@@ -67,11 +74,14 @@
     $("#play").click(function(event) {
       document.getElementById("video_elem").play();
       document.getElementById("audio_elem").play();
+      $("#pause").prop("disabled", false);
+      $("#stop").prop("disabled", false);
     });
 
     $("#pause").click(function(event) {
       document.getElementById("video_elem").pause();
       document.getElementById("audio_elem").pause();
+      $("#play").prop("disabled", false);
     });
 
     $("#stop").click(function(event) {
@@ -79,6 +89,8 @@
       document.getElementById("audio_elem").pause();
       document.getElementById("video_elem").currentTime = 0;
       document.getElementById("audio_elem").currentTime = 0;
+      $("#play").prop("disabled", false);
+      $("#pause").prop("disabled", true);
     });
 
     $("#respond").click(function(event) {
@@ -123,13 +135,25 @@
           alert('Nugget not found!');
         } else {
           display_vid(snapshot.val());
+          $("#play").prop("disabled", false);
+          $("#respond").prop("disabled", false);
           loadedVid = true;
         }
       }
     });
   }
 
-  function display_vid(data) {    
+  function display_vid(data) {
+    var vid_base64 = "";
+    for (var i = 0; i < NUM_VID_BLOCKS; i++) {
+      vid_base64 += data["v" + i];
+    }
+     
+    var aud_base64 = "";
+    for (var i = 0; i < NUM_AUD_BLOCKS; i++) {
+      aud_base64 += data["a" + i];
+    }    
+
     var video = document.createElement("video");
     video.autoplay = false;
     video.controls = false; // optional
@@ -139,7 +163,7 @@
     video.id = "video_elem";
 
     var source = document.createElement("source");
-    var vid_blob = base64_to_blob(data.v);
+    var vid_blob = base64_to_blob(vid_base64);
     vid_blob.type = "video/webm"
     source.src =  URL.createObjectURL(vid_blob);
     source.type =  "video/webm";
@@ -149,7 +173,7 @@
     var audio = document.createElement("audio");
     audio.controls = false;
     audio.id = "audio_elem";
-    var audio_blob = base64_to_blob(data.a);
+    var audio_blob = base64_to_blob(aud_base64);
     audio_blob.type = "audio/wav";
     audio.src = URL.createObjectURL(audio_blob);
     audio.type = "audio/wav";

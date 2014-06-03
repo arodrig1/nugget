@@ -8,12 +8,17 @@
   //var REC_KEY = 220;
   var progress_interval;
 
+  var MAX_FIREBASE_BYTES = 10485760;
+  var FIREBASE_BLOCK_SIZE = MAX_FIREBASE_BYTES/5;
+  var NUM_VID_BLOCKS = 10;
+  var NUM_AUD_BLOCKS = 15;
+
   var cur_video_blob = null;
   var fb_instance;
   var username = null;
   var fb_nugget_id = null;
   var fb_new_nugget = null;
-  var ready;
+  var ready = 0;
 
   var tour = new Tour({
     // storage: false,
@@ -63,17 +68,18 @@
     $("#record").prop("disabled", true);
     $("#stop").prop("disabled", true);
     $("#play").prop("disabled", true);
-    $("#play").hide();
+    //$("#play").hide();
     $("#pause").prop("disabled", true);
-    $("#pause").hide();
+    //$("#pause").hide();
     $("#rewind").prop("disabled", true);
-    $("#rewind").hide();
+    //$("#rewind").hide();
     $("#clear").prop("disabled", true);
-    $("#clear").hide();
+    //$("#clear").hide();
     $("#send").prop("disabled", true);
+    $("#continue").prop("disabled", true);
 
-    tour.init();
-    tour.start();
+    //tour.init();
+    //tour.start();
 
     $("#record").prop("disabled", false);
   });
@@ -92,159 +98,7 @@
     $("#nugget_id_input").val(fb_nugget_id);
   }
 
-  function prompt_username() {
-    // block until username is answered
-    username = window.prompt("Welcome! Please enter your name, as you would like your recipients to see it:");
-    if(!username){
-      username = "anonymous" + Math.floor(Math.random()*1111);
-    }
-  }
-
-  function attach_video(video_blob) {
-    $("#video_container").empty();
-
-    var video = document.createElement("video");
-    video.autoplay = false;
-    video.controls = false; // optional
-    video.loop = false;
-    video.width = 640;
-    video.height = 480;
-    video.id = "video_elem";
-
-    var source = document.createElement("source");
-    video_blob.type = "video/webm"
-    source.src =  URL.createObjectURL(video_blob);
-    source.type =  "video/webm";
-
-    video.appendChild(source);
-
-    document.getElementById("video_container").appendChild(video);
-  }
-
-  function attach_audio(audio_blob) {
-    detach_audio();
-
-    var audio = document.createElement("audio");
-    audio.controls = false;
-    audio.id = "audio_elem";
-    audio_blob.type = "audio/wav";
-    audio.src = URL.createObjectURL(audio_blob);
-    audio.type = "audio/wav";
-
-    document.getElementById("audio_container").appendChild(audio);
-  }
-
-  function detach_audio() {
-    $("#audio_container").empty(); 
-  }
-    
-  function set_button_handlers() {
-    $("#record").click(function(event) {
-      if (ready == 2) {
-        recordRTC_Video.startRecording();
-        recordRTC_Audio.startRecording();
-        $(this).prop("disabled", true);
-        //$("#recordbar").progressbar("enable");
-        $("#stop").prop("disabled", false);
-        progress_interval = setInterval(function() {
-          $("#recordbar").progressbar("value", $("#recordbar").progressbar("value") + 1);
-        }, 250);
-      } else {
-        alert("Allow audio and video first!");
-      }      
-    });
-
-    $("#stop").click(function(event) {
-      clearInterval(progress_interval);
-      $(this).prop("disabled", true);
-
-      recordRTC_Video.stopRecording(function(videoURL) {
-        datauri_to_blob(videoURL, function(blob) {
-          attach_video(blob);
-          blob_to_base64(blob, function(base64){
-            fb_new_nugget.child("f").set(username);
-            fb_new_nugget.child("v").set(base64);
-            console.log("Nugget f and v entries set!");
-          });
-        });        
-      });
-
-      recordRTC_Audio.stopRecording(function(audioURL) {
-        datauri_to_blob(audioURL, function(blob) {
-          attach_audio(blob);
-          blob_to_base64(blob, function(base64){
-            fb_new_nugget.child("a").set(base64);
-            console.log("Nugget a entry set!");
-          });
-        });
-      });
-
-      $("#record").prop("disabled", true);
-      $("#record").hide();
-      $("#stop").prop("disabled", true);
-      $("#stop").hide();
-
-      $("#play").prop("disabled", false);
-      $("#play").show();
-      $("#pause").show();
-      $("#rewind").show();
-
-      $("#clear").prop("disabled", false);
-      $("#clear").show();
-      $("#send").prop("disabled", false);
-    });
-
-    $("#clear").click(function(event) {
-      connect_webcam();
-      detach_audio();
-      $("#send").prop("disabled", true);
-
-      $("#play").prop("disabled", true);
-      $("#play").hide();
-      $("#pause").prop("disabled", true);
-      $("#pause").hide();
-      $("#rewind").prop("disabled", true);
-      $("#rewind").hide();
-
-      $("#clear").prop("disabled", true);
-      $("#record").prop("disabled", false);
-      $("#record").show();
-      $("#stop").prop("disabled", true);
-      $("#stop").show();
-      $("#clear").hide();     
-
-      $("#recordbar").progressbar("value", BAR_MIN);
-    });
-
-    $("#play").click(function(event) {
-      $(this).prop("disabled", true);
-      document.getElementById("video_elem").play();
-      document.getElementById("audio_elem").play();
-      $("#pause").prop("disabled", false);
-      $("#rewind").prop("disabled", false);
-    });
-
-    $("#pause").click(function(event) {
-      $(this).prop("disabled", true);
-      document.getElementById("video_elem").pause();
-      document.getElementById("audio_elem").pause();
-      $("#play").prop("disabled", false);
-      $("#rewind").prop("disabled", false);
-    });
-
-    $("#rewind").click(function(event) {
-      $(this).prop("disabled", true);
-      document.getElementById("video_elem").pause();
-      document.getElementById("audio_elem").pause();
-      document.getElementById("video_elem").currentTime = 0;
-      document.getElementById("audio_elem").currentTime = 0;
-      $("#play").prop("disabled", false);
-    });
-  }
-
   function connect_webcam() {
-    ready = 0; // use a counter to make sure audio and video are all ready
-
     // record video
     navigator.getUserMedia({video: true}, function(mediaStream) {
       // create video element, attach webcam stream to video element
@@ -275,6 +129,162 @@
       ready += 1;
     },function(failure){
       console.log(failure);
+    });
+  }
+
+  function attach_video(video_blob) {
+    $("#video_playback_container").empty();
+
+    var video = document.createElement("video");
+    video.autoplay = false;
+    video.controls = false; // optional
+    video.loop = false;
+    video.width = 640;
+    video.height = 480;
+    video.id = "video_elem";
+
+    var source = document.createElement("source");
+    video_blob.type = "video/webm"
+    source.src =  URL.createObjectURL(video_blob);
+    source.type =  "video/webm";
+
+    video.appendChild(source);
+
+    document.getElementById("video_playback_container").appendChild(video);
+  }
+
+  function attach_audio(audio_blob) {
+    detach_audio();
+
+    var audio = document.createElement("audio");
+    audio.controls = false;
+    audio.id = "audio_elem";
+    audio_blob.type = "audio/wav";
+    audio.src = URL.createObjectURL(audio_blob);
+    audio.type = "audio/wav";
+
+    document.getElementById("audio_container").appendChild(audio);
+  }
+
+  function detach_audio() {
+    $("#audio_container").empty(); 
+  }
+    
+  function set_button_handlers() {
+    $("#record").click(function(event) {
+      if (ready == 2) {
+        recordRTC_Video.startRecording();
+        recordRTC_Audio.startRecording();
+        $(this).prop("disabled", true);
+        $("#stop").prop("disabled", false);
+        progress_interval = setInterval(function() {
+          $("#recordbar").progressbar("value", $("#recordbar").progressbar("value") + 1);
+        }, 250);
+      } else {
+        alert("Allow audio and video first!");
+      }      
+    });
+
+    $("#stop").click(function(event) {
+      clearInterval(progress_interval);
+      $(this).prop("disabled", true);
+
+      recordRTC_Video.stopRecording(function(videoURL) {
+        datauri_to_blob(videoURL, function(blob) {
+          attach_video(blob);
+          blob_to_base64(blob, function(base64){
+            for (var i = 0; i < NUM_VID_BLOCKS; i++) {
+              var part = base64.substring(FIREBASE_BLOCK_SIZE * i, FIREBASE_BLOCK_SIZE * (i + 1));
+              fb_new_nugget.child("v" + i).set(part);
+            }
+            console.log("Nugget v entries set!");
+          });
+        });        
+      });
+
+      recordRTC_Audio.stopRecording(function(audioURL) {
+        datauri_to_blob(audioURL, function(blob) {
+          attach_audio(blob);
+          blob_to_base64(blob, function(base64){
+            for (var i = 0; i < NUM_AUD_BLOCKS; i++) {
+              var part = base64.substring(FIREBASE_BLOCK_SIZE * i, FIREBASE_BLOCK_SIZE * (i + 1));
+              fb_new_nugget.child("a" + i).set(part);
+            }
+            console.log("Nugget a entries set!");
+          });
+        });
+      });
+
+      $("#record").prop("disabled", true);
+      //$("#record").hide();
+      $("#stop").prop("disabled", true);
+      //$("#stop").hide();
+
+      $("#play").prop("disabled", false);
+      //$("#play").show();
+      //$("#pause").show();
+      //$("#rewind").show();
+
+      $("#clear").prop("disabled", false);
+      //$("#clear").show();
+      $("#continue").prop("disabled", false);
+
+      $("#stepCarousel").carousel('next');
+    });
+
+    $("#clear").click(function(event) {
+      //connect_webcam();
+      detach_audio();
+      $("#continue").prop("disabled", true);
+      $("#send").prop("disabled", true);
+
+      $("#play").prop("disabled", true);
+      //$("#play").hide();
+      $("#pause").prop("disabled", true);
+      //$("#pause").hide();
+      $("#rewind").prop("disabled", true);
+      //$("#rewind").hide();
+
+      $("#clear").prop("disabled", true);
+      $("#record").prop("disabled", false);
+      //$("#record").show();
+      $("#stop").prop("disabled", true);
+      //$("#stop").show();
+      //$("#clear").hide();     
+
+      $("#recordbar").progressbar("value", BAR_MIN);
+
+      $("#stepCarousel").carousel('prev');
+    });
+
+    $("#continue").click(function(event) {
+      $("#send").prop("disabled", false);
+      $("#stepCarousel").carousel('next');
+    })
+
+    $("#play").click(function(event) {
+      $(this).prop("disabled", true);
+      document.getElementById("video_elem").play();
+      document.getElementById("audio_elem").play();
+      $("#pause").prop("disabled", false);
+      $("#rewind").prop("disabled", false);
+    });
+
+    $("#pause").click(function(event) {
+      $(this).prop("disabled", true);
+      document.getElementById("video_elem").pause();
+      document.getElementById("audio_elem").pause();
+      $("#play").prop("disabled", false);
+      $("#rewind").prop("disabled", false);
+    });
+
+    $("#rewind").click(function(event) {
+      $(this).prop("disabled", true);
+      document.getElementById("video_elem").pause();
+      document.getElementById("audio_elem").pause();
+      document.getElementById("video_elem").currentTime = 0;
+      document.getElementById("audio_elem").currentTime = 0;
+      $("#play").prop("disabled", false);
     });
   }
 

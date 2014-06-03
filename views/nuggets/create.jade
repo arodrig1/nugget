@@ -1,49 +1,61 @@
 extends layout
 
-block content
-  h1 NUGGET
-  .container
-    div#floater
-      .row#content
-        .col-md-2
+block content  
+  div.navbar.navbar-inverse.navbar-static-top(role="navigation")
+    div.container
+      div.navbar-header
+        a.navbar-brand(href="#"). Nugget
+      div.collapse.navbar-collapse
+        ul.nav.navbar-nav.navbar-right
+          li
+            a#help(href="#"). Help
+
+  div#stepCarousel.carousel.slide(data-ride="carousel" data-interval="false" data-wrap="false")
+    div.carousel-inner
+      div.item.active
+        div.container
+          div#video_container
+            video
+          div#recordbar
+          div#audio_container
           button.btn.btn-danger(type="button" id="record")
             span.glyphicon.glyphicon-record
             |  Record
-          button.btn.btn-success(type="button" id="play")
-            span.glyphicon.glyphicon-play
-            |  Play
-          button.btn.btn-success(type="button" id="pause")
-            span.glyphicon.glyphicon-pause
-            |  Pause
-          button.btn.btn-success(type="button" id="rewind")
-            span.glyphicon.glyphicon-step-backward
-            |  Rewind
-        .col-md-8
-          div#waiting
-      
-          div#video_container
-          div#audio_container
-          div#recordbar
-        .col-md-2
           button.btn.btn-success(type="button" id="stop")
             span.glyphicon.glyphicon-stop
             |  Stop
+      div.item
+        div.container
+          div#video_playback_container
+          button.btn.btn-primary(type="button" id="play")
+            span.glyphicon.glyphicon-play
+            |  Play
+          button.btn.btn-primary(type="button" id="pause")
+            span.glyphicon.glyphicon-pause
+            |  Pause
+          button.btn.btn-primary(type="button" id="rewind")
+            span.glyphicon.glyphicon-step-backward
+            |  Rewind
           button.btn.btn-warning(type="button" id="clear")
             span.glyphicon.glyphicon-remove-sign
-            |  Clear
-
-  form(action='/nuggets/send', method='post', id='submit_form')
-  input(type="hidden" name="nugget_id" id="nugget_id_input")
-  label(for="name"). Your Name:
-  input(type="text" name="name" required)
-  br()
-  label(for="from"). Your Email Address:
-  input(type="email" name="from")
-  br()
-  label(for="to"). Recipient Email Address:
-  input(type="email" name="to" required)
-  input(type="submit" value="Send!" id="send")
+            |  Back
+          button.btn.btn-success(type="button" id="continue")
+            span.glyphicon.glyphicon-chevron-right
+            |  Continue
+      div.item
+        div.container
+          form(action='/nuggets/send', method='post', id='submit_form')
+            input(type="hidden" name="nugget_id" id="nugget_id_input")
+            label(for="name"). Your Name:
+            input(type="text" name="name" required)
+            br()
+            label(for="from"). Your Email Address:
+            input(type="email" name="from")
+            br()
+            label(for="to"). Recipient Email Address:
+            input(type="email" name="to" required)
+            button.btn.btn-success(type="submit" id="send")
+              span.glyphicon.glyphicon-ok
+              |  Send
 
   script(src='/javascript/nuggetRecord.js')
-  
-

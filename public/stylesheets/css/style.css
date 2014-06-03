@@ -2,20 +2,34 @@ body {
   padding: 25px;
   font: 18px "Lucida Grande", Helvetica, Arial, sans-serif;
   text-align: center;
+  background-image: url('background.jpeg');
+}
+
+@font-face {
+	font-family: 'RieslingRegular';
+	src: url('fonts/riesling.eot');
+	src: local('Riesling Regular'), local('Riesling'), url('fonts/riesling.ttf') format('truetype');
 }
 
 h1 {
-	font-family: Garamond, serif;
+	font-family: 'RieslingRegular', Arial, sans-serif;
 	line-height: 1em;
-	color: black;
-	t
+	color: white;
+	background-color: #FF6600;
+	font-size: 100px;
 }
 
 p {
 	font-family: Garamond;
 	line-height: 1em;
 	color:black;
+}
 
+#video_container {
+	height: 494px;
+	padding: 4px;
+	border-style: solid;
+	border-color: #FF6600;
 }
 
 #floater {
