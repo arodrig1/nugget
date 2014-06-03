@@ -5,12 +5,15 @@ block content
   div#webcam_stream
   div#audio_container
 
-  button(id="play", data-action="bea").
-    Play
-  button(id="pause", data-action="bea").
-    Pause
-  button(id="stop", data-action="bea").
-    Stop
+  button.btn.btn-primary(id="play")
+    span.glyphicon.glyphicon-play
+    |  Play
+  button.btn.btn-primary(id="pause")
+    span.glyphicon.glyphicon-pause
+    |  Pause
+  button.btn.btn-primary(id="stop")
+    span.glyphicon.glyphicon-stop
+    |  Stop
 
   script(src='/javascript/responsePlayback.js')
 
