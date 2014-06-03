@@ -38,7 +38,8 @@ p {
 }
 .btn{
 	height: 40px;
-	width: 100px;
+	width: 115px;
+	padding-right: 10px;
 }
 .glyphicon {
 	position: relative;
