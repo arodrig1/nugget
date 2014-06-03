@@ -1,14 +1,21 @@
 extends layout
 
-block content
-  h1 Nugget
+block content  
+  div.navbar.navbar-inverse.navbar-static-top(role="navigation")
+    div.container
+      div.navbar-header
+        a.navbar-brand(href="#"). Nugget
+      div.collapse.navbar-collapse
+        ul.nav.navbar-nav.navbar-right
+          li
+            a#help(href="#"). Help
 
   div.description
 
-    p You can view it 
-      a(href=nugget_url).
-        here
+    p Your nugget has been sent!
+    p You will be notified to your email upon receiving a response!
 
   a(href="/nuggets/new")
-    button(id="home_btn").
+    button.btn.btn-primary(id="home_btn").
       Send new nugget
+ 
